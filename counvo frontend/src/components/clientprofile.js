@@ -718,20 +718,7 @@ return (
           />
         </Grid>
 
-        <Grid item xs={12}>
-          <TextField
-            className="custom-textfield"
-            label="Residential Address"
-            name="residential_address"
-            defaultValue={edituserprofile.residential_address}
-            multiline
-            minRows={2}
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={handleChangeedit}
-          />
-        </Grid>
+    
 
        <Grid item xs={12}>
       <Select
@@ -791,20 +778,7 @@ return (
           />
         </Grid>
 
-        <Grid item xs={12}>
-          <TextField
-            className="custom-textfield"
-            label="Correspondence Address (Optional)"
-            name="corrosponding_address"
-            multiline
-            value={edituserprofile.corrosponding_address}
-            minRows={2}
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={handleChangeedit}
-          />
-        </Grid>
+     
 
       
         <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>

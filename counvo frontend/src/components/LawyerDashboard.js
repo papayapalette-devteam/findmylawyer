@@ -367,7 +367,11 @@ const markMessagesRead = async (clientId) => {
         const formatted = data.map(msg => ({
           text: msg.message,
           isMe: msg.from === user1Id,
-          timestamp: msg.timestamp
+          timestamp: msg.timestamp,
+          isSystem: false,
+        fileUrl:msg.fileUrl,
+        fileName:msg.fileName, 
+        fileType:msg.fileType
         }));
         setMessages(formatted);
       } else {
@@ -1761,7 +1765,10 @@ const [clientMap, setClientMap] = useState({}); // { clientId: clientName, ... }
             {msg.text}
             {msg.fileUrl && (
               msg.fileType && msg.fileType.startsWith('image/')
-                ? <img src={msg.fileUrl} alt={msg.fileName} style={{ maxWidth: 150, maxHeight: 150, marginTop: 8, borderRadius: 4 }} />
+                ? 
+                 <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
+                <img src={msg.fileUrl} alt={msg.fileName} style={{ maxWidth: 150, maxHeight: 150, marginTop: 8, borderRadius: 4 }} />
+                </a>
                 : <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">📄 {msg.fileName}</a>
             )}
             <div style={{

@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Lottie from "lottie-react";
 import Swal from 'sweetalert2';
 import { event } from 'jquery';
+import socket from './socket';
 
 
 const LawyerProfileModal = () => {
@@ -27,6 +28,23 @@ const LawyerProfileModal = () => {
     }, []);
     
       const lawyerdetails = JSON.parse(localStorage.getItem('lawyerDetails'));
+
+
+  useEffect(() => {
+    if (!lawyerdetails?.lawyer?._id) return;
+
+    if (!socket.connected) socket.connect();
+
+    socket.on('connect', () => {
+      const lawyerId = lawyerdetails.lawyer._id;
+      socket.emit('lawyerOnline', lawyerId);
+      socket.emit('getOnlineClients');
+    });
+      socket.on('onlineClientsList', ids => {
+          // setOnlineClients(ids);
+        });
+      }
+    )
 
         const [show, setShow] = useState(false);
         const [activeTab1, setActiveTab1] = useState('');
@@ -107,11 +125,18 @@ const practiceTypes = [
 ];
 
  const practicingcourts = [
-  { value: 'family', label: 'Family Law' },
-  { value: 'criminal', label: 'Criminal Law' },
-  { value: 'corporate', label: 'Corporate Law' },
-  { value: 'property', label: 'Property Law' },
+  { value: '', label: 'Select Courts' },
+  { value: 'other', label: 'Other' },
+  { value: 'tis_hazari_court', label: 'Tis Hazari Court' },
+  { value: 'saket_court', label: 'Saket Court' },
+  { value: 'karkardooma_court', label: 'Karkardooma Court' },
+  { value: 'patiala_house_court', label: 'Patiala House Court' },
+  { value: 'rohini_court', label: 'Rohini Court' },
+  { value: 'dwarka_court', label: 'Dwarka Court' },
+  { value: 'rouse_avenue_court', label: 'Rouse Avenue Court' },
+  { value: 'high_court', label: 'High Court' },
 ];
+
 
 const degreeOptions = ['LLB', 'LLM', 'BA LLB', 'BBA LLB', 'Other'];
 const addEducationField = () => {
@@ -140,28 +165,9 @@ const stateBarCouncils = [
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
 
-const identityproof = ['Aadhar Card', 'Pan', 'Passport', 'Voter Id', 'Other'];
-const addidentityField = () => {
-  setlawyerprofile((prev) => ({
-    ...prev,
-    identity_proof: [...prev.identity_proof, ""],
-    identity_number: [...prev.identity_number, ""],
-    identity_pic: [...prev.identity_pic, null],
-    address_proof: [...prev.address_proof, ""],
-    address_pic: [...prev.address_pic, null],
-  }));
-};
 
-const handleDeleteidentity = (index) => {
-  setlawyerprofile((prev) => ({
-    ...prev,
-    identity_proof: prev.identity_proof.filter((_, i) => i !== index),
-    identity_number: prev.identity_number.filter((_, i) => i !== index),
-    identity_proof: prev.identity_proof.filter((_, i) => i !== index),
-    address_proof: prev.address_proof.filter((_, i) => i !== index),
-    address_pic: prev.address_pic.filter((_, i) => i !== index),
-  }));
-};
+
+
 
 const days = [
   { value: 'sun', label: 'Sunday' },
@@ -173,11 +179,7 @@ const days = [
   { value: 'sat', label: 'Saturday' },
 ];
 
-const consultation_mode  = [
-  { value: 'chat', label: 'Chat' },
-  { value: 'video',label: 'Video' },
-  { value: 'inperson', label: 'In Person' },
-];
+
 
 const handleChange = (e) => {
   const { name, value } = e.target;
@@ -198,39 +200,12 @@ const handlearrayChange = (index, field, value) => {
   });
 };
 
-const handleCertificateUpload = (index, file) => {
-  setlawyerprofile((prev) => {
-    const updatedCertificates = [...prev.certificate];
-    updatedCertificates[index] = file;
-    return {
-      ...prev,
-      certificate: updatedCertificates,
-    };
-  });
-};
 
 
-const handleidentityupload = (index, file) => {
-  setlawyerprofile((prev) => {
-    const updateidentity = [...prev.identity_pic];
-    updateidentity[index] = file;
-    return {
-      ...prev,
-      identity_pic: updateidentity,
-    };
-  });
-};
 
-const handleaddresspicupload = (index, file) => {
-  setlawyerprofile((prev) => {
-    const updateaddresspic = [...prev.address_pic];
-    updateaddresspic[index] = file;
-    return {
-      ...prev,
-      address_pic: updateaddresspic,
-    };
-  });
-};
+
+
+
 
 const completelawyerprofile=async()=>
 {
@@ -299,6 +274,19 @@ const handleChangeedit = (e) => {
   }));
 };
 
+
+ const handle_profile_pic_change = (e) => {
+  const files = Array.from(e.target.files);
+  if (files.length > 0) {
+    const file = files[0];
+    // const previewUrl = URL.createObjectURL(file);
+    seteditlawyerprofile({
+      ...editlawyerprofile,
+      profilepic: file,
+      // profile_pic_preview: previewUrl,
+    });
+  }
+};
 const handlearrayChangeedit = (index, field, value) => {
   seteditlawyerprofile((prev) => {
     const updatedArray = [...prev[field]];
@@ -329,6 +317,7 @@ const handleDeleteEducationedit = (index) => {
   }));
 };
 
+console.log(editlawyerprofile);
 
         
         const completeeditlawyerprofile=async()=>
@@ -1735,7 +1724,8 @@ return (
                   accept=".pdf, .jpg, .jpeg, .png"
                   id={`profilepic`}
                   style={{ display: "none" }}
-                  onChange={(e)=>seteditlawyerprofile({...editlawyerprofile,profilepic:Array.from(e.target.files)})}
+                  onChange={handle_profile_pic_change}
+                  // onChange={(e)=>seteditlawyerprofile({...editlawyerprofile,profilepic:Array.from(e.target.files)})}
                 />
                 <label htmlFor={`profilepic`}>
                   <IconButton

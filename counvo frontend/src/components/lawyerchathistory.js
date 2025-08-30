@@ -80,6 +80,7 @@ function LawyerChatHistory() {
     }
   };
   
+  
 
   // Online clients (if you have this)
   useEffect(() => {
@@ -127,6 +128,35 @@ function LawyerChatHistory() {
     };
   }, [lawyerdetails.lawyer._id, chatClient]);
 
+
+   const fetchChatHistory = async (user1Id, user2Id) => {
+      try {
+        const res = await api.get(`api/admin/chathistory/${user1Id}/${user2Id}`);
+      
+        
+        const data = await res.data;
+  
+        if (res.status === 200) {
+          const formatted = data.map(msg => ({
+            text: msg.message,
+            isMe: msg.from === user1Id,
+            timestamp: msg.timestamp,
+            isSystem: false,
+          fileUrl:msg.fileUrl,
+          fileName:msg.fileName, 
+          fileType:msg.fileType
+          }));
+          setMessages(formatted);
+        } else {
+          console.error('❌ Failed to fetch history:', data.error);
+        }
+      } catch (err) {
+        console.error('❌ Network error:', err);
+      }
+    };
+
+
+
   // Fetch full chat with this client
   const handleOpenChat = async (client) => {
     setChatClient(client);
@@ -136,25 +166,7 @@ function LawyerChatHistory() {
       [client._id]: false
     }));
     const lawyerId = lawyerdetails.lawyer._id;
-    try {
-      setIsLoading(true);
-      const res = await api.get(`api/admin/chathistory/${client._id}/${lawyerId}`);
-      const data = res.data || [];
-      const formatted = data.map(msg => ({
-        text: msg.message,
-        isMe: msg.from === lawyerId,
-        isSystem: false,
-        fileUrl: msg.fileUrl,
-        fileName: msg.fileName,
-        fileType: msg.fileType,
-        timestamp: msg.timestamp
-      }));
-      setMessages(formatted);
-      setTimeout(() => setIsLoading(false), 300);
-    } catch (err) {
-      setIsLoading(false);
-      Swal.fire("Failed to load chat", "", "error");
-    }
+   await fetchChatHistory(lawyerId,client._id)
   };
 
   // Send a message to client
@@ -282,19 +294,39 @@ function LawyerChatHistory() {
                 </button>
               </div>
               <div className="chat-messages" style={{ height: 300, overflow: "auto" }}>
-                {messages.map((msg, idx) => (
-                  <div
-                    key={idx}
-                    className={`message ${msg.isMe ? 'sent' : 'received'}`}
-                  >
-                    {msg.text}
-                    <div style={{ fontSize: "10px", marginTop: 2 }}>
-                      {msg.timestamp
-                        ? new Date(msg.timestamp).toLocaleString()
-                        : ""}
-                    </div>
-                  </div>
-                ))}
+               {messages.map((msg, idx) => (
+          <div key={idx} className={`message ${msg.isMe ? 'sent' : 'received'}`}
+            style={{
+              maxWidth: "80%",
+              padding: "0.75rem 1rem",
+              borderRadius: "18px",
+              fontSize: "0.875rem",
+              lineHeight: 1.4,
+              background: msg.isMe ? "#1e40af" : "white",
+              color: msg.isMe ? "white" : "#1f2937",
+              border: msg.isMe ? "none" : "1px solid #e5e7eb",
+              alignSelf: msg.isMe ? "flex-end" : "flex-start",
+              wordWrap: "break-word"
+            }}>
+            {msg.text}
+            {msg.fileUrl && (
+              msg.fileType && msg.fileType.startsWith('image/')
+                ? 
+                <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
+                  <img src={msg.fileUrl} alt={msg.fileName} style={{ maxWidth: 150, maxHeight: 150, marginTop: 8, borderRadius: 4 }} />
+                  </a>
+                : <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">📄 {msg.fileName}</a>
+            )}
+            <div style={{
+              fontSize: '10px',
+              color: msg.isMe ? 'white' : 'black',
+              marginTop: '2px',
+              textAlign: msg.isMe ? 'right' : 'left'
+            }}>
+              {msg.timestamp ? new Date(msg.timestamp).toLocaleString() : ''}
+            </div>
+          </div>
+        ))}
               </div>
               <div className="chat-input">
                 <input

@@ -239,39 +239,23 @@ const updatelawyerprofile = async (req, res) => {
   const lawyerid=req.params._id
 
     // Prepare for file upload
-  const imagefiles = [];
+
   const imagefiles1 = [];
-  const imagefiles2 = [];
   const imagefiles3 = [];
-  const imagefiles4 = [];
-  const imagefiles5 = [];
+
+
+  
+   
 
   if (req.files) {
-    const imagefield = req.files.filter(file => file.fieldname.includes(`certificate`));
-    const imagefield1 = req.files.filter(file => file.fieldname.includes(`identity_pic`));
-    const imagefield2 = req.files.filter(file => file.fieldname.includes(`address_pic`));
+ 
+    const imagefield1 = req.files.filter(file => file.fieldname.includes(`profilepic`));
     const imagefield3 = req.files.filter(file => file.fieldname.includes(`barCertificate`));
-    const imagefield4 = req.files.filter(file => file.fieldname.includes(`aibeCertificate`));
-    const imagefield5 = req.files.filter(file => file.fieldname.includes(`proofofpractice`));
 
-    for (let file of imagefield) {
-      try {
-        const result = await cloudinary.uploader.upload(file.path);
-        imagefiles.push(result.secure_url);  
 
-        // Delete file after upload
-        fs.unlink(file.path, (err) => {
-          if (err) {
-            console.error(`Failed to delete file: ${file.path}`, err);
-          } else {
-            console.log(`Successfully deleted file: ${file.path}`);
-          }
-        });
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
-    }
+    
 
+   
        for (let file of imagefield1) {
       try {
         const result = await cloudinary.uploader.upload(file.path);
@@ -290,23 +274,7 @@ const updatelawyerprofile = async (req, res) => {
       }
     }
 
-       for (let file of imagefield2) {
-      try {
-        const result = await cloudinary.uploader.upload(file.path);
-        imagefiles2.push(result.secure_url);  
-
-        // Delete file after upload
-        fs.unlink(file.path, (err) => {
-          if (err) {
-            console.error(`Failed to delete file: ${file.path}`, err);
-          } else {
-            console.log(`Successfully deleted file: ${file.path}`);
-          }
-        });
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
-    }
+   
 
        for (let file of imagefield3) {
       try {
@@ -326,52 +294,17 @@ const updatelawyerprofile = async (req, res) => {
       }
     }
 
-       for (let file of imagefield4) {
-      try {
-        const result = await cloudinary.uploader.upload(file.path);
-        imagefiles4.push(result.secure_url);  
+   
 
-        // Delete file after upload
-        fs.unlink(file.path, (err) => {
-          if (err) {
-            console.error(`Failed to delete file: ${file.path}`, err);
-          } else {
-            console.log(`Successfully deleted file: ${file.path}`);
-          }
-        });
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
-    }
-
-       for (let file of imagefield5) {
-      try {
-        const result = await cloudinary.uploader.upload(file.path);
-        imagefiles5.push(result.secure_url);  
-
-        // Delete file after upload
-        fs.unlink(file.path, (err) => {
-          if (err) {
-            console.error(`Failed to delete file: ${file.path}`, err);
-          } else {
-            console.log(`Successfully deleted file: ${file.path}`);
-          }
-        });
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
-    }
+    
 
   }
 
    const updatedFields = {
                         ...req.body,
-                        certificate:imagefiles,
-                        identity_pic:imagefiles1,
-                        address_pic:imagefiles2,
+                        profilepic:imagefiles1,
                         barCertificate:imagefiles3,
-                        aibeCertificate:imagefiles4,
-                        proofofpractice:imagefiles5,
+                       
                     };
 
   const resp = await lawyerModel.findByIdAndUpdate(

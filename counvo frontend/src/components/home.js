@@ -871,6 +871,7 @@ const filterLawyersAndChat = async() => {
           { text: message, fileUrl, fileName, fileType, isMe: false }
         ],
       }));
+   
     
       // If this client is currently selected, add message to visible chat
       if (chatLawyer?._id === from) {
@@ -1980,7 +1981,9 @@ useEffect(() => {
             {msg.text}
             {msg.fileUrl && (
               msg.fileType && msg.fileType.startsWith('image/') ? (
+                <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
                 <img src={msg.fileUrl} alt={msg.fileName} style={{ maxWidth: 150, maxHeight: 150 }} />
+                </a>
               ) : (
                 <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
                   📄 {msg.fileName}

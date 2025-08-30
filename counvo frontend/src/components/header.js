@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logo1 from '../components/counvoImg/Counvo - LOGO (1).png';
-import logo from '../components/counvoImg/image.png'
+import logo from '../components/counvoImg/Counvo Logo-01.png'
 import Swal from 'sweetalert2';
 import api from '../api';
 import socket from './socket';
@@ -118,7 +118,8 @@ export default function Header() {
       <style>{`
         .header {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
+          height: 80px; 
           justify-content: space-between;
           background: #fff;
           padding: 10px 20px;
@@ -129,8 +130,10 @@ export default function Header() {
         }
 
         .logo {
-          height: 50px;
+          margin-top:-70px;
+          height: 200px;
           cursor: pointer;
+          object-fit: contain;
         }
           .logo1 {
           height: 50px;
@@ -139,6 +142,7 @@ export default function Header() {
         }
 
         .nav-links {
+          margin-top:10px !important;
           color: black;
           display: flex;
           gap: 30px;
@@ -148,6 +152,7 @@ export default function Header() {
         }
 
         .nav-links li {
+        
           cursor: pointer;
           font-weight: 500;
           position: relative;
@@ -189,7 +194,7 @@ export default function Header() {
         @media (max-width: 768px) {
           .nav-links {
             position: fixed;
-            top: 70px;
+            top:70px;
             left: 0;
             right: 0;
             background: #fff;
@@ -200,11 +205,19 @@ export default function Header() {
             transition: transform 0.3s cubic-bezier(.4,0,.2,1);
           }
 
+           .logo {
+           margin-top:-40px;
+          height: 150px;
+          cursor: pointer;
+          object-fit: contain;
+        }
+
           .nav-links.open {
             transform: translateY(0);
           }
 
           .hamburger {
+          margin-top:30px !important;
             display: flex;
           }
         }

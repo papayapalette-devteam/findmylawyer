@@ -1946,6 +1946,10 @@ useEffect(() => {
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Yes, close it!",
+                 didOpen: () => {
+                  document.querySelector('.swal2-container').style.zIndex = '9999';
+                }
+                
               }).then((result) => {
                 if (result.isConfirmed) {
                   setChatLawyer(null);

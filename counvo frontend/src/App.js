@@ -25,6 +25,7 @@ import Allchat from './components/allchat';
 import { LawyerFeedbackForm } from './components/lawyerfeedback';
 import CustomerFeedbackForm from './components/customerfeedback';
 import LawyerChatHistory from './components/lawyerchathistory';
+import Privacyolicy from './components/privacy_policy';
 
 
 
@@ -53,6 +54,7 @@ function App() {
       <Route path='/contactus' element={<ContactUs/>}></Route>
       <Route path='/allchat' element={<Allchat/>}></Route>
       <Route path='/lawyerchathistory' element={<LawyerChatHistory/>}></Route>
+      <Route path='/privacy-policy' element={<Privacyolicy/>}></Route>
     </Routes>  
 
    </div>

@@ -96,7 +96,7 @@ const Footer = () => (
         <h4 style={headingStyles}>Quick Links</h4>
         <ul style={ulStyles}>
           <li>
-            <a href="#" style={linkStyles}>Terms and Conditions</a>
+            <a href="termsandconditions" style={linkStyles}>Terms and Conditions</a>
           </li>
           <li>
             <a href="/privacy-policy" style={linkStyles}>Privacy Policy</a>

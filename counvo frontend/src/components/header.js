@@ -302,7 +302,7 @@ export default function Header() {
               zIndex: 1000
             }}
           >
-            <li onClick={() => { navigate('/privacypolicy'); setMenuOpen(false); setSubmenuOpen(false); }}>Privacy Policy</li>
+            <li onClick={() => { navigate('/privacy-policy'); setMenuOpen(false); setSubmenuOpen(false); }}>Privacy Policy</li>
             <li onClick={() => { navigate('/supports'); setMenuOpen(false); setSubmenuOpen(false); }}>Support</li>
             <li onClick={() => { navigate('/termsandconditions'); setMenuOpen(false); setSubmenuOpen(false); }}>Terms & Conditions</li>
           </ul>

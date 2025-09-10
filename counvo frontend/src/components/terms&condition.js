@@ -155,9 +155,9 @@ const TermsAndConditions = () => (
         <li>
           <b>Contact Information</b>
           <ul>
-            <li>Email: <a href="mailto:support@counvo.com">support@counvo.com</a></li>
-            <li>Phone: +91-XXXXX-XXXXX</li>
-            <li>Address: [Platform Address]</li>
+            <li>Email: <a href="mailto:support@counvo.com">admin@counvo.in</a></li>
+            <li>Phone: +91-97736 76088</li>
+            <li>Address:PLOT NO 6,GROUND FLOOR KH NO.10/2 AND 9 VILLAGE BAPROLA. DELHI 110041</li>
           </ul>
         </li>
       </ol>

@@ -725,101 +725,6 @@ recentChats.forEach(chat => {
 
 
 
-    // Filter lawyers based on search
-const filterLawyersAndChat = async() => {
-  if (!userData?.user._id) {
-    return navigate('/login');
-  }
-
-  setIsLoading(true);
-  setTimeout(() => {
-    setIsLoading(false);
-
- let filtered = lawyers.filter(lawyer => onlineLawyers.includes(lawyer._id));
-
-    // ✅ Must match specialization
-    if (specialization) {
-      filtered = filtered.filter(lawyer =>
-        Array.isArray(lawyer.specializations)
-          ? lawyer.specializations.some(spec =>
-              (spec.label && spec.label.toLowerCase().includes(specialization.toLowerCase())) ||
-              (spec.value && spec.value.toLowerCase().includes(specialization.toLowerCase()))
-            )
-          : (lawyer.specializations?.label || lawyer.specializations?.value || lawyer.specializations || '')
-              .toLowerCase()
-              .includes(specialization.toLowerCase())
-      );
-    }
-
-    // ✅ Must match language
-    if (language) {
-      filtered = filtered.filter(lawyer =>
-        Array.isArray(lawyer.languages)
-          ? lawyer.languages.some(lang =>
-              (lang.label && lang.label.toLowerCase().includes(language.toLowerCase())) ||
-              (lang.value && lang.value.toLowerCase().includes(language.toLowerCase()))
-            )
-          : (lawyer.languages?.label || lawyer.languages?.value || lawyer.languages || '')
-              .toLowerCase()
-              .includes(language.toLowerCase())
-      );
-    }
-
-    // ✅ Court is optional
-    let courtMatched = [];
-    if (court && court.trim() !== "") {
-      courtMatched = filtered.filter(lawyer =>
-        Array.isArray(lawyer.practicingcourts) &&
-        lawyer.practicingcourts.some(c =>
-          [c.label, c.value].some(
-            v => v && v.toLowerCase() === court.toLowerCase()
-          )
-        )
-      );
-    }
-
-    // ✅ If courtMatched not empty, prefer it. Otherwise keep specialization+language result
-    if (courtMatched.length > 0) {
-      filtered = courtMatched;
-    }
-
-    // ✅ No lawyers found after filtering
-    if (filtered.length === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "Search result...",
-        text: "No lawyers available.",
-        showConfirmButton: "true"
-      });
-      return;
-    }
-
-  
-    
-
-    // ✅ Try to find an online lawyer
-    let candidates = [...filtered];
-    while (candidates.length > 0) {
-      const idx = Math.floor(Math.random() * candidates.length);
-      const candidate = candidates[idx];
-      if (onlineLawyers.includes(candidate._id)) {
-        const text="hello"
-         handleSendMessage(text)
-        handleOpenChat(candidate);
-        return;
-      }
-      candidates.splice(idx, 1);
-    }
-
-    // ✅ No online lawyer in filtered
-    Swal.fire({
-      icon: "info",
-      title: "Search result...",
-      text: "No lawyers available online.",
-      showConfirmButton: "true"
-    });
-  }, 2000);
-};
 
 
 
@@ -896,32 +801,73 @@ const filterLawyersAndChat = async() => {
     };
   }, [userData?.user._id, chatLawyer]);
 
-  const handleSendMessage = (text) => {
-    if (!text.trim() || !chatLawyer?._id) return;
-
-    if (containsSensitiveInfo(text)) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Not Allowed 🚫',
-        text: 'Sharing mobile numbers or emails is not permitted!',
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      });
-      return;
-    }
+  // const handleSendMessage = (text) => {
+   
+  //   if (!text.trim() || !chatLawyer?._id) return;
+  //   console.log(chatLawyer);
+  //   alert("hello")
     
-     const timestamp = new Date().toISOString();
 
-    socket.emit('privateMessage', {
-      toUserId: chatLawyer._id,
-      message: text,
-      fromUserType: 'client',
-      timestamp
+  //   alert(text)
+  //   if (containsSensitiveInfo(text)) {
+  //     Swal.fire({
+  //       icon: 'warning',
+  //       title: 'Not Allowed 🚫',
+  //       text: 'Sharing mobile numbers or emails is not permitted!',
+  //       timer: 3000,
+  //       timerProgressBar: true,
+  //       showConfirmButton: false,
+  //     });
+  //     return;
+  //   }
+    
+  //    const timestamp = new Date().toISOString();
+
+  //   socket.emit('privateMessage', {
+  //     toUserId: chatLawyer._id,
+  //     message: text,
+  //     fromUserType: 'client',
+  //     timestamp
+  //   });
+
+  //   setMessages((prev) => [...prev, { text, isMe: true,timestamp  }]);
+  // };
+
+
+  const handleSendMessage = (text, lawyer) => {
+  // ✅ first set state for later renders
+  // if (lawyer) setChatLawyer(lawyer._id);
+
+  // ✅ use lawyer param if provided, else fallback to chatLawyer
+  const targetLawyer = lawyer || chatLawyer;
+
+  if (!text.trim() || !targetLawyer?._id) return;
+
+ 
+  if (containsSensitiveInfo(text)) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Not Allowed 🚫',
+      text: 'Sharing mobile numbers or emails is not permitted!',
+      timer: 3000,
+      timerProgressBar: true,
+      showConfirmButton: false,
     });
+    return;
+  }
 
-    setMessages((prev) => [...prev, { text, isMe: true,timestamp  }]);
-  };
+  const timestamp = new Date().toISOString();
+
+  socket.emit('privateMessage', {
+    toUserId: targetLawyer._id,  // ✅ send to lawyer immediately
+    message: text,
+    fromUserType: 'client',
+    timestamp
+  });
+
+  setMessages((prev) => [...prev, { text, isMe: true, timestamp }]);
+};
+
 
     const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -1126,6 +1072,105 @@ useEffect(() => {
 
 //====================================================== chat end===================================================================
 
+
+
+
+    // Filter lawyers based on search
+const filterLawyersAndChat = () => {
+  if (!userData?.user._id) {
+    return navigate('/login');
+  }
+
+  setIsLoading(true);
+  setTimeout( async() => {
+    setIsLoading(false);
+
+ let filtered = lawyers.filter(lawyer => onlineLawyers.includes(lawyer._id));
+
+    // ✅ Must match specialization
+    if (specialization) {
+      filtered = filtered.filter(lawyer =>
+        Array.isArray(lawyer.specializations)
+          ? lawyer.specializations.some(spec =>
+              (spec.label && spec.label.toLowerCase().includes(specialization.toLowerCase())) ||
+              (spec.value && spec.value.toLowerCase().includes(specialization.toLowerCase()))
+            )
+          : (lawyer.specializations?.label || lawyer.specializations?.value || lawyer.specializations || '')
+              .toLowerCase()
+              .includes(specialization.toLowerCase())
+      );
+    }
+
+    // ✅ Must match language
+    if (language) {
+      filtered = filtered.filter(lawyer =>
+        Array.isArray(lawyer.languages)
+          ? lawyer.languages.some(lang =>
+              (lang.label && lang.label.toLowerCase().includes(language.toLowerCase())) ||
+              (lang.value && lang.value.toLowerCase().includes(language.toLowerCase()))
+            )
+          : (lawyer.languages?.label || lawyer.languages?.value || lawyer.languages || '')
+              .toLowerCase()
+              .includes(language.toLowerCase())
+      );
+    }
+
+    // ✅ Court is optional
+    let courtMatched = [];
+    if (court && court.trim() !== "") {
+      courtMatched = filtered.filter(lawyer =>
+        Array.isArray(lawyer.practicingcourts) &&
+        lawyer.practicingcourts.some(c =>
+          [c.label, c.value].some(
+            v => v && v.toLowerCase() === court.toLowerCase()
+          )
+        )
+      );
+    }
+
+    // ✅ If courtMatched not empty, prefer it. Otherwise keep specialization+language result
+    if (courtMatched.length > 0) {
+      filtered = courtMatched;
+    }
+
+    // ✅ No lawyers found after filtering
+    if (filtered.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "Search result...",
+        text: "No lawyers available.",
+        showConfirmButton: "true"
+      });
+      return;
+    }
+
+  
+    
+
+    // ✅ Try to find an online lawyer
+    let candidates = [...filtered];
+    while (candidates.length > 0) {
+      const idx = Math.floor(Math.random() * candidates.length);
+      const candidate = candidates[idx];
+      if (onlineLawyers.includes(candidate._id)) {
+
+         await handleOpenChat(candidate);
+
+         handleSendMessage("hello",candidate);
+        return;
+      }
+      candidates.splice(idx, 1);
+    }
+
+    // ✅ No online lawyer in filtered
+    Swal.fire({
+      icon: "info",
+      title: "Search result...",
+      text: "No lawyers available online.",
+      showConfirmButton: "true"
+    });
+  }, 2000);
+};
 
 
 

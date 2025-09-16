@@ -167,6 +167,7 @@ const [sessionTimestamps, setSessionTimestamps] = useState({}); // { [clientId]:
 
 
  const handleReceiveMessage = async ({ from, message, fileUrl, fileName, fileType }) => {
+ console.log(message);
  
   setHasNewMessages(true);
     markMessagesRead(from);

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { FaEnvelope, FaPhoneAlt, FaInstagram, FaFacebookF, FaLinkedinIn } from "react-icons/fa";
 import Header from "./header";
+import Footer from "./footer";
 
 const Colors = {
   primary: "#09316B",
@@ -214,6 +215,7 @@ export default function ContactUs() {
         </LegalBox>
       </Container>
     </Wrapper>
+    <Footer/>
    </>
   );
 }

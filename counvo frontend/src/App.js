@@ -26,6 +26,8 @@ import { LawyerFeedbackForm } from './components/lawyerfeedback';
 import CustomerFeedbackForm from './components/customerfeedback';
 import LawyerChatHistory from './components/lawyerchathistory';
 import Privacyolicy from './components/privacy_policy';
+import ShippingPolicy from './components/shipping_policy';
+import CancelliationPolicy from './components/cancellation_policy';
 
 
 
@@ -55,6 +57,8 @@ function App() {
       <Route path='/allchat' element={<Allchat/>}></Route>
       <Route path='/lawyerchathistory' element={<LawyerChatHistory/>}></Route>
       <Route path='/privacy-policy' element={<Privacyolicy/>}></Route>
+      <Route path='/shipping-policy' element={<ShippingPolicy/>}></Route>
+      <Route path='/cancellation-policy' element={<CancelliationPolicy/>}></Route>
     </Routes>  
 
    </div>

@@ -101,8 +101,17 @@ const Footer = () => (
           <li>
             <a href="/privacy-policy" style={linkStyles}>Privacy Policy</a>
           </li>
-          <li>
+          {/* <li>
             <a href="#" style={linkStyles}>Cookies Policy</a>
+          </li> */}
+               <li>
+            <a href="shipping-policy" style={linkStyles}>Shipping policy</a>
+          </li>
+             <li>
+            <a href="/cancellation-policy" style={linkStyles}>Cancellation Policy</a>
+          </li>
+               <li>
+            <a href="/contactus" style={linkStyles}>Contact us</a>
           </li>
         </ul>
       </div>

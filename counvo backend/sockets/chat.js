@@ -90,6 +90,8 @@ module.exports = (io) => {
     socket.on('privateMessage', async ({ toUserId, message, fromUserType, fileUrl, fileName, fileType, timestamp }) => {
       let receiverSocketId;
       let fromModel, toModel;
+      console.log(message);
+      
 
       if (fromUserType === 'client') {
         receiverSocketId = onlineLawyers[toUserId];

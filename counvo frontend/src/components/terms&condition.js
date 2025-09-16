@@ -1,6 +1,7 @@
 import React from "react";
 import "../css/TermsAndConditions.css"; // Place the CSS below in this file or use a <style> tag
 import Header from "./header";
+import Footer from "./footer";
 
 const TermsAndConditions = () => (
     <div>
@@ -164,6 +165,7 @@ const TermsAndConditions = () => (
       <p className="terms-thankyou">Thank you for choosing Counvo.</p>
     </div>
   </section>
+  <Footer/>
   </div>
 );
 

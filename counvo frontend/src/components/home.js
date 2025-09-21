@@ -2107,7 +2107,11 @@ const filterLawyersAndChat = () => {
 </div>
 
 
-          <div className="chat-input">
+          <div className="chat-input"
+           style={{
+    pointerEvents: isAccepted ? "auto" : "none", // disables all interactions if false
+    opacity: isAccepted ? 1 : 0.6, // optional: makes it look disabled
+  }} >
             <input
     type="file"
     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"

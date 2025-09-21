@@ -8,6 +8,9 @@ module.exports = (io) => {
   console.log('Chat socket connected');
 
   io.on('connection', (socket) => {
+
+
+
     // Lawyer comes online
     socket.on('lawyerOnline', async (lawyerId) => {
       socket.userType = 'lawyer';
@@ -186,6 +189,22 @@ module.exports = (io) => {
         console.error('❌ Failed to mark messages read:', err);
       }
     });
+
+    // Lawyer accepts a client's chat request
+socket.on('chatAccepted', ({ clientId }) => {
+  const lawyerId = socket.userId; // because this socket is lawyer
+  const clientSocketId = onlineClients[clientId];
+console.log("welcome");
+
+  if (clientSocketId) {
+    // Notify the client that the lawyer accepted the chat
+    io.to(clientSocketId).emit('chatAccepted', { lawyerId });
+    console.log(`✅ Lawyer ${lawyerId} accepted chat with Client ${clientId}`);
+  } else {
+    console.log(`⚠️ Client ${clientId} not online to receive chatAccepted`);
+  }
+});
+
 
     // Handle disconnect event, clean up socket ids
     socket.on('disconnect', () => {

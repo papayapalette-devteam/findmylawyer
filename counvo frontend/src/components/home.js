@@ -726,7 +726,7 @@ recentChats.forEach(chat => {
 
 
 
-
+const [isAccepted, setIsAccepted] = useState(false);
 
 
 
@@ -751,6 +751,9 @@ recentChats.forEach(chat => {
     socket.on('updateOnlineUsers', (ids) => {
       setOnlineLawyers(ids);
     });
+
+    
+
 
     // socket.on('receiveMessage', ({ from, message,fileUrl, fileName, fileType }) => {
      
@@ -1024,6 +1027,20 @@ useEffect(() => {
   });
   return () => socket.off('typing');
 }, [chatLawyer]);
+
+
+useEffect(() => {
+  console.log("hello");
+  
+  socket.on("chatAccepted", ({ lawyerId }) => {
+    if (chatLawyer?._id === lawyerId) {
+      setIsAccepted(true); // ✅ now allow sending messages
+    }
+  });
+  return () => socket.off("chatAccepted");
+}, [chatLawyer]);
+
+console.log(isAccepted);
 
 
 // useEffect(() => {
@@ -2024,27 +2041,71 @@ const filterLawyersAndChat = () => {
             >✖</button> */}
           </div>
 
-        <div className="chat-messages">
-        {messages.map((msg, idx) => (
-          <div key={idx} className={`message ${msg.isMe ? 'sent' : 'received'}`}>
-            {msg.text}
-            {msg.fileUrl && (
-              msg.fileType && msg.fileType.startsWith('image/') ? (
-                <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
-                <img src={msg.fileUrl} alt={msg.fileName} style={{ maxWidth: 150, maxHeight: 150 }} />
-                </a>
-              ) : (
-                <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
-                  📄 {msg.fileName}
-                </a>
-              )
-            )}
-       <div style={{ fontSize: '10px', color: 'black', marginTop: '2px', textAlign: msg.isMe ? 'right' : 'left' }}>
-      {msg.timestamp ? new Date(msg.timestamp).toLocaleString() : ''}
+       <div className="chat-messages">
+  {!isAccepted ? (
+    // Show loader while waiting
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+        width: "100%",
+        padding: "20px",
+      }}
+    >
+      {/* Spinner */}
+      <div
+        style={{
+          border: "4px solid #f3f3f3",
+          borderTop: "4px solid #3b82f6",
+          borderRadius: "50%",
+          width: 40,
+          height: 40,
+          animation: "spin 1s linear infinite",
+          marginBottom: 12,
+        }}
+      ></div>
+      <span style={{ color: "#3b82f6", fontWeight: 500 }}>
+        Waiting for lawyer to accept your request...
+      </span>
+
+      <style>
+        {`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        `}
+      </style>
     </div>
-  </div>
-))}
-      </div>
+  ) : (
+    // Normal messages after accepted
+    <>
+      {messages.map((msg, idx) => (
+        <div key={idx} className={`message ${msg.isMe ? 'sent' : 'received'}`}>
+          {msg.text}
+          {msg.fileUrl && (
+            msg.fileType && msg.fileType.startsWith('image/') ? (
+              <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
+                <img src={msg.fileUrl} alt={msg.fileName} style={{ maxWidth: 150, maxHeight: 150 }} />
+              </a>
+            ) : (
+              <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
+                📄 {msg.fileName}
+              </a>
+            )
+          )}
+          <div style={{ fontSize: '10px', color: 'black', marginTop: '2px', textAlign: msg.isMe ? 'right' : 'left' }}>
+            {msg.timestamp ? new Date(msg.timestamp).toLocaleString() : ''}
+          </div>
+        </div>
+      ))}
+    </>
+  )}
+</div>
+
 
           <div className="chat-input">
             <input

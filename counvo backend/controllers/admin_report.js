@@ -49,19 +49,45 @@ exports.getcase_type = async (req, res) => {
 
 exports.session_time = async (req, res) => {
   try {
-    const { sessionTime, switchTime } = req.body;
-    console.log(req.body);
-    
+    const { user,sessionTime, switchTime } = req.body;
 
     // Create a new record
     const record = await ChatTime.create({
+      user,
       sessionTime,
       switchTime
     });
 
-    console.log(record);
-    
-    res.json({ success: true, data: record });
+    res.status(200).send({ success: true, data: record });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+
+exports.get_session_time = async (req, res) => {
+ try {
+    const sessionAvg = await ChatTime.aggregate([
+      { $match: { sessionTime: { $gt: 0 } } },
+      { $group: { _id: null, avgSessionTime: { $avg: "$sessionTime" } } }
+    ]);
+
+    const switchAvg = await ChatTime.aggregate([
+      { $match: { switchTime: { $gt: 0 } } },
+      { $group: { _id: null, avgSwitchTime: { $avg: "$switchTime" } } }
+    ]);
+
+    const avgSessionSec = sessionAvg[0]?.avgSessionTime || 0;
+    const avgSwitchSec = switchAvg[0]?.avgSwitchTime || 0;
+
+    // Convert seconds to minutes (rounded to 2 decimals)
+    const averagesInMinutes = {
+      avgSessionTime: +(avgSessionSec / 60).toFixed(2),
+      avgSwitchTime: +(avgSwitchSec / 60).toFixed(2)
+    };
+
+    res.status(200).json({ success: true, data: averagesInMinutes });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Server error' });

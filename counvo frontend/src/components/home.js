@@ -944,26 +944,41 @@ const sessiontime=async(switchtime,sessiontime)=>
   }
 }
 
-
-const handleSwapLawyer = async () => {
-
-   // Calculate duration with current lawyer
+const logSessionTime = async () => {
   const start = localStorage.getItem('switchStartTime');
   if (start && chatLawyer?._id) {
     const startTime = new Date(start);
-    const now = new Date();
-    const durationMs = now - startTime; // in milliseconds
-    const durationSec = Math.floor(durationMs / 1000);
+    const durationSec = Math.floor((new Date() - startTime) / 1000);
 
-    console.log(`User spent ${durationSec} seconds with lawyer ${chatLawyer._id}`);
-  
-
-
-  //  const payload={sessionTime:0,switchTime:durationSec}
-  //   const resp=await api.post(`api/admin/session-time`,payload)
+    try {
+      const payload = {user:userData.user._id, sessionTime: durationSec, switchTime: 0 };
+      await api.post('api/admin/session-time', payload);
+    } catch (error) {
+      console.error('Session logging error:', error);
+    }
   }
+};
 
 
+const logswitchtime = async () => {
+  const start = localStorage.getItem('switchStartTime');
+  if (start && chatLawyer?._id) {
+    const startTime = new Date(start);
+    const durationSec = Math.floor((new Date() - startTime) / 1000);
+
+    try {
+      const payload = {user:userData.user._id, sessionTime: 0, switchTime: durationSec };
+      await api.post('api/admin/session-time', payload);
+    } catch (error) {
+      console.error('Session logging error:', error);
+    }
+  }
+};
+
+
+const handleSwapLawyer = async () => {
+
+  logswitchtime();
 
 setIsLoading(true)
   // Wait for the first half of the flip
@@ -1808,16 +1823,16 @@ const filterLawyersAndChat = () => {
                 cursor: 'pointer',
               }}
               onClick={() => {
+                  logSessionTime()
+                  // const start = localStorage.getItem('switchStartTime');
+                  // if (start && chatLawyer?._id) {
+                  //   const startTime = new Date(start);
+                  //   const now = new Date();
+                  //   const durationMs = now - startTime; // in milliseconds
+                  //   const durationSec = Math.floor(durationMs / 1000);
 
-                  const start = localStorage.getItem('switchStartTime');
-                  if (start && chatLawyer?._id) {
-                    const startTime = new Date(start);
-                    const now = new Date();
-                    const durationMs = now - startTime; // in milliseconds
-                    const durationSec = Math.floor(durationMs / 1000);
-
-                    console.log(`User spent ${durationSec} seconds with lawyer ${chatLawyer._id}`);
-                  }
+                  //   console.log(`User spent ${durationSec} seconds with lawyer ${chatLawyer._id}`);
+                  // }
 
               Swal.fire({
                 title: "Are you sure?",

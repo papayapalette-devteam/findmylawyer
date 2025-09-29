@@ -1,0 +1,70 @@
+.analytics-container {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+  background: #f7f8fa;
+}
+
+.analytics-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  padding: 20px;
+  text-align: center;
+}
+
+.card.full {
+  grid-column: 1/-1;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 10px;
+}
+
+.icon.indigo { color: #4F46E5; }
+.icon.green { color: #22C55E; }
+.icon.yellow { color: #F59E0B; }
+.icon.blue { color: #3B82F6; }
+.icon.red { color: #EF4444; }
+.icon.cyan { color: #06B6D4; }
+
+/* .label {
+  font-size: 14px;
+  color: #666;
+} */
+
+.value {
+  font-size: 22px;
+  font-weight: bold;
+  color: #222;
+}
+
+.big-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.title.small {
+  font-size: 16px;
+}
+
+.chart {
+  width: 100%;
+  height: 250px;
+}

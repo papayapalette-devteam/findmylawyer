@@ -28,6 +28,7 @@ import LawyerChatHistory from './components/lawyerchathistory';
 import Privacyolicy from './components/privacy_policy';
 import ShippingPolicy from './components/shipping_policy';
 import CancelliationPolicy from './components/cancellation_policy';
+import AdminReport from './components/AdminReport';
 
 
 
@@ -59,6 +60,7 @@ function App() {
       <Route path='/privacy-policy' element={<Privacyolicy/>}></Route>
       <Route path='/shipping-policy' element={<ShippingPolicy/>}></Route>
       <Route path='/cancellation-policy' element={<CancelliationPolicy/>}></Route>
+      <Route path='/admin-report' element={<AdminReport/>}></Route>
     </Routes>  
 
    </div>

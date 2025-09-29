@@ -755,18 +755,6 @@ const [isAccepted, setIsAccepted] = useState(false);
     
 
 
-    // socket.on('receiveMessage', ({ from, message,fileUrl, fileName, fileType }) => {
-     
-    //       markMessagesRead(from);
-    //       console.log(fileUrl);
-    //       console.log(fileName);
-    //       console.log(fileType);
-          
-    //   if (chatLawyer?._id === from) {
-    //     setMessages((prev) => [...prev, { text: message, fileUrl, fileName, fileType, isMe: false }]);
-    //   }
-   
-    // });
 
      const receiveMessage = async ({ from, message, fileUrl, fileName, fileType }) => {
       // setHasNewMessages(true);
@@ -804,37 +792,6 @@ const [isAccepted, setIsAccepted] = useState(false);
     };
   }, [userData?.user._id, chatLawyer]);
 
-  // const handleSendMessage = (text) => {
-   
-  //   if (!text.trim() || !chatLawyer?._id) return;
-  //   console.log(chatLawyer);
-  //   alert("hello")
-    
-
-  //   alert(text)
-  //   if (containsSensitiveInfo(text)) {
-  //     Swal.fire({
-  //       icon: 'warning',
-  //       title: 'Not Allowed 🚫',
-  //       text: 'Sharing mobile numbers or emails is not permitted!',
-  //       timer: 3000,
-  //       timerProgressBar: true,
-  //       showConfirmButton: false,
-  //     });
-  //     return;
-  //   }
-    
-  //    const timestamp = new Date().toISOString();
-
-  //   socket.emit('privateMessage', {
-  //     toUserId: chatLawyer._id,
-  //     message: text,
-  //     fromUserType: 'client',
-  //     timestamp
-  //   });
-
-  //   setMessages((prev) => [...prev, { text, isMe: true,timestamp  }]);
-  // };
 
 
   const handleSendMessage = (text, lawyer) => {
@@ -922,6 +879,11 @@ const markMessagesRead = async (lawyerid) => {
 
   
   const handleOpenChat = async (lawyer) => {
+
+  const startTime = new Date(); // current timestamp
+  localStorage.setItem('switchStartTime', startTime.toISOString());
+
+
     const isOnline = onlineLawyers.includes(lawyer._id);
     setChatLawyer({ ...lawyer, isOnline });
     
@@ -968,7 +930,40 @@ const markMessagesRead = async (lawyerid) => {
 
   const [isFlipping, setIsFlipping] = useState(false);
 
+const sessiontime=async(switchtime,sessiontime)=>
+{
+  try {
+    alert("hello")
+    const payload={switchtime,sessiontime}
+    const resp=await api.post(`api/admin/session-time`,payload)
+    console.log(payload);
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+
 const handleSwapLawyer = async () => {
+
+   // Calculate duration with current lawyer
+  const start = localStorage.getItem('switchStartTime');
+  if (start && chatLawyer?._id) {
+    const startTime = new Date(start);
+    const now = new Date();
+    const durationMs = now - startTime; // in milliseconds
+    const durationSec = Math.floor(durationMs / 1000);
+
+    console.log(`User spent ${durationSec} seconds with lawyer ${chatLawyer._id}`);
+  
+
+
+  //  const payload={sessionTime:0,switchTime:durationSec}
+  //   const resp=await api.post(`api/admin/session-time`,payload)
+  }
+
+
 
 setIsLoading(true)
   // Wait for the first half of the flip
@@ -1043,40 +1038,6 @@ useEffect(() => {
 console.log(isAccepted);
 
 
-// useEffect(() => {
-//   socket.on('missedMessagesNotification', async (notifications) => {
-//     // Get unique client IDs to fetch
-//     const clientIds = [...new Set(notifications.map(n => n._id))];
-
-
-//     // Fetch clients data from API 
-//     const clientIdNameMap = {};
-//     await Promise.all(clientIds.map(async (id) => {
-//       try {
-//         const res = await api.get(`api/lawyer/getlawyer/${id}`);
-//         console.log(res);
-        
-//         clientIdNameMap[id] = res.data.firstName || 'Lawyer';
-//       } catch {
-//         clientIdNameMap[id] = 'Lawyer'; // fallback
-//       }
-//     }));
-
-//     // Show notifications with correct names
-//     notifications.forEach(({ _id: clientId, count }) => {
-//       const name = clientIdNameMap[clientId] || clientId;
-//       Swal.fire({
-//         icon: 'info',
-//         title: 'Unread Messages',
-//         text: `You have ${count} unread message${count > 1 ? 's' : ''} from ${name}.`,
-//         timer: 4000,
-//         showConfirmButton: true,
-//       });
-//     });
-//   });
-
-//   return () => socket.off('missedMessagesNotification');
-// }, [userData?.user?._id]);
 
 
 
@@ -1091,8 +1052,23 @@ console.log(isAccepted);
 
 
 
+//=============================== Filter lawyers based on search===================================
 
-    // Filter lawyers based on search
+
+const case_type=async(specialization)=>
+{
+  try {
+    const payload={type_of_case:specialization}
+
+    const resp=await api.post('api/admin/case-type',payload)
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+
 const filterLawyersAndChat = () => {
   if (!userData?.user._id) {
     return navigate('/login');
@@ -1106,6 +1082,7 @@ const filterLawyersAndChat = () => {
 
     // ✅ Must match specialization
     if (specialization) {
+      case_type(specialization)
       filtered = filtered.filter(lawyer =>
         Array.isArray(lawyer.specializations)
           ? lawyer.specializations.some(spec =>
@@ -1369,46 +1346,7 @@ const filterLawyersAndChat = () => {
     <strong>Example:</strong><br></br>
     My legal issue is my employer is not paying my salary. What category of lawyer do I need — criminal, civil, family, corporate, consumer, labour, or cyber?
   </div>
-  {/* <div class="lawyer-types-table-responsive">
-    <table class="lawyer-types-table">
-      <thead>
-        <tr>
-          <th>Lawyer Type</th>
-          <th>What They Cover</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Criminal</td>
-          <td>Defending or prosecuting criminal charges (theft, assault, fraud, etc.)</td>
-        </tr>
-        <tr>
-          <td>Civil</td>
-          <td>Property disputes, breach of contract, damages, torts, general non-criminal matters</td>
-        </tr>
-        <tr>
-          <td>Family</td>
-          <td>Divorce, child custody, alimony, adoption, domestic violence</td>
-        </tr>
-        <tr>
-          <td>Corporate</td>
-          <td>Business formation, mergers, acquisitions, compliance, contracts, shareholder disputes</td>
-        </tr>
-        <tr>
-          <td>Consumer</td>
-          <td>Product/service complaints, consumer fraud, unfair trade practices, warranty issues</td>
-        </tr>
-        <tr>
-          <td>Labour</td>
-          <td>Employment disputes, unpaid salary, wrongful termination, workplace harassment</td>
-        </tr>
-        <tr>
-          <td>Cyber</td>
-          <td>Online fraud, hacking, data breaches, cyberbullying, digital privacy</td>
-        </tr>
-      </tbody>
-    </table>
-  </div> */}
+
 </section>
 
  <section className="olc-expertise-section">
@@ -1476,63 +1414,7 @@ const filterLawyersAndChat = () => {
 
  
 
- {/* <section className="olc-cta-section">
-    <div className="olc-cta-container">
-      <p className="olc-cta-text">
-        Searching for experienced lawyers near me?
-        <br />
-        Zolvit is the best choice for online legal consultation. Get expert legal guidance tailored to your situation.
-      </p>
-      <button
-        aria-label="Get started"
-        className="olc-cta-btn"
-      >
-        Consult A Lawyer Now
-      </button>
-    </div>
-  </section> */}
 
-{/* <section className="olc-expertservices-section">
-    <h2 className="olc-expertservices-title">
-      Our Expert Services For Your Legal Needs
-    </h2>
-    <p className="olc-expertservices-lead">
-      At Zolvit, we provide a comprehensive range of legal services designed to meet all your needs efficiently and effectively. Our team of experienced professionals is dedicated to delivering expert support across various legal matters. Here’s how we can assist you:
-    </p>
-    <div className="olc-expertservices-grid">
-      {expertServices.map((service, idx) => (
-        <div className={`olc-service-outer ${service.gradient} ${service.cardRadius}`} key={service.title}>
-          <div className={`olc-service-card ${service.cardRadius}`}>
-            {idx % 2 === 0 ? (
-              <>
-                <div className="olc-service-img-wrap">
-                  <img src={service.img} alt={service.title} className="olc-service-img" loading="lazy" />
-                </div>
-                <div className="olc-service-content">
-                  <div className={`olc-service-label ${service.labelGradient} ${service.labelRadius}`}>
-                    <p>{service.title}</p>
-                  </div>
-                  <p className="olc-service-desc">{service.description}</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="olc-service-content">
-                  <div className={`olc-service-label ${service.labelGradient} ${service.labelRadius}`}>
-                    <p>{service.title}</p>
-                  </div>
-                  <p className="olc-service-desc">{service.description}</p>
-                </div>
-                <div className="olc-service-img-wrap">
-                  <img src={service.img} alt={service.title} className="olc-service-img" loading="lazy" />
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  </section> */}
 
    <section className="olc-benefits-section">
     <h2 className="olc-benefits-title">Benefits of Online Lawyer Consultation</h2>
@@ -1588,81 +1470,7 @@ const filterLawyersAndChat = () => {
   </section>
 
 
-{/* <section className="olc-cities-section">
-    <h2 className="olc-cities-title">
-      Online Lawyer Consultations Offered in Other Cities
-    </h2>
-    <div className="olc-cities-list">
-      {cities.map((city) => (
-        <a
-          className="olc-city-link"
-          href={`#${city}`}
-          key={city}
-        >
-          #{city}
-        </a>
-      ))}
-    </div>
-  </section> */}
 
-
-  {/* <section className="olc-cta-banner-section">
-    <div className="olc-cta-banner-container">
-      <h3 className="olc-cta-banner-title">
-        Get legal advice online anywhere, anytime through Zolvit. Completely easy and online process with no hassles.
-      </h3>
-      <button
-        aria-label="Get started"
-        className="olc-cta-banner-btn"
-      >
-        TALK TO A LAWYER NOW
-      </button>
-    </div>
-  </section> */}
-
-
-  {/* <section className="olc-faqs-section">
-      <div className="olc-faqs-container">
-        <h2 className="olc-faqs-title">FAQs on Lawyer Services</h2>
-        <div className="olc-faqs-list">
-          {faqs.map((faq, idx) => (
-            <div
-              className={`olc-faq-card ${openIndex === idx ? "olc-faq-open" : ""}`}
-              key={faq.question}
-              onClick={() => handleToggle(idx)}
-              tabIndex={0}
-              role="button"
-              aria-expanded={openIndex === idx}
-              aria-controls={`faq-answer-${idx}`}
-              onKeyDown={e => {
-                if (e.key === "Enter" || e.key === " ") handleToggle(idx);
-              }}
-            >
-              <div className="olc-faq-question-row">
-                <p className="olc-faq-question">{faq.question}</p>
-                <span className="olc-faq-icon">
-                  <img
-                    src={
-                      openIndex === idx
-                        ? "https://assets.vakilsearch.com/live-images/zolvit-accordion-minus.svg"
-                        : "https://assets.vakilsearch.com/live-images/zolvit-accordion-plus.svg"
-                    }
-                    alt={openIndex === idx ? "accordion-on" : "accordion-off"}
-                    width="20"
-                    height="20"
-                  />
-                </span>
-              </div>
-              {openIndex === idx && (
-                <div className="olc-faq-answer" id={`faq-answer-${idx}`}>
-                  {faq.answer}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section> */}
 
 
 
@@ -2000,6 +1808,17 @@ const filterLawyersAndChat = () => {
                 cursor: 'pointer',
               }}
               onClick={() => {
+
+                  const start = localStorage.getItem('switchStartTime');
+                  if (start && chatLawyer?._id) {
+                    const startTime = new Date(start);
+                    const now = new Date();
+                    const durationMs = now - startTime; // in milliseconds
+                    const durationSec = Math.floor(durationMs / 1000);
+
+                    console.log(`User spent ${durationSec} seconds with lawyer ${chatLawyer._id}`);
+                  }
+
               Swal.fire({
                 title: "Are you sure?",
                 text: "Do you really want to close the chat?",

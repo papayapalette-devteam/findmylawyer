@@ -54,7 +54,7 @@ const Adminsidebar = () => {
     },
     { icon: <FaBell />, label: 'Notifications' },
     { icon: <FaEnvelope />, label: 'Messages',route: '/allchat', },
-    { icon: <FaChartBar />, label: 'Reports' },
+    { icon: <FaChartBar />, label: 'Reports',route:'/admin-report' },
     { icon: <FaSignOutAlt />, label: 'Logout',route: '/login' }
   ];
 

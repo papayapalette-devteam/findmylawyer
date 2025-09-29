@@ -36,12 +36,35 @@ const AdminReport = () => {
     {
     get_case_type()
     },[])
+
+      const[session_time,setsession_time]=useState([])
+      const[switch_time,setswitch_time]=useState([])
+    const get_session_time=async()=>
+    {
+      try {
+        const resp=await api.get('api/admin/session-time')
+        console.log(resp);
+       
+
+      setsession_time(resp.data.data.avgSessionTime)
+      setswitch_time(resp.data.data.avgSwitchTime)
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+
+    useEffect(()=>
+    {
+    get_session_time()
+    },[])
     
 
   const data = {
-    avgTimeToSwitch: "3.5 interactions",
+    avgTimeToSwitch: switch_time,
     repeatInteractionsPercent: 45,
-    avgSessionDuration: "15 mins",
+    avgSessionDuration: session_time,
     timeToFirstConsultation: "2 days",
     acquisitionSource: [
       { name: "Ads", value: 40 },
@@ -83,7 +106,7 @@ const AdminReport = () => {
         <div className="card">
           <Clock className="icon indigo" />
           <p className="label">Time to Lawyer Switch</p>
-          <h3 className="value">{data.avgTimeToSwitch}</h3>
+          <h3 className="value">{data.avgTimeToSwitch} Minutes</h3>
         </div>
         <div className="card">
           <Repeat className="icon green" />
@@ -93,7 +116,7 @@ const AdminReport = () => {
         <div className="card">
           <Timer className="icon yellow" />
           <p className="label">Avg. Session Duration</p>
-          <h3 className="value">{data.avgSessionDuration}</h3>
+          <h3 className="value">{data.avgSessionDuration} Minutes</h3>
         </div>
         <div className="card">
           <Users className="icon blue" />

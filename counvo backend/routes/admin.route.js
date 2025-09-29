@@ -12,8 +12,8 @@ const chatupload=require('../middlewares/chatupload')
 const { getAdminDashboard } = require('../controllers/adminController');
 const  {getchathistory,getallchathistory, uploaddocument, getallchathistoryforrecentchat}  = require('../controllers/chathistory');
 const { addfeedback, addlawyerfeedback } = require('../controllers/feedback');
-const { CaseType, getcase_type, switch_time } = require('../controllers/admin_report');
-const session_time = require('../models/session_time');
+const { CaseType, getcase_type, session_time, get_session_time } = require('../controllers/admin_report');
+
 
 // Admin dashboard route
 router.get('/dashboard', getAdminDashboard);
@@ -38,6 +38,7 @@ router.post('/case-type',CaseType)
 router.get('/case-type',getcase_type)
 
 router.post('/session-time',session_time)
+router.get('/session-time',get_session_time)
 
 
 module.exports = router;

@@ -6,6 +6,7 @@ import Clientsidebar from './clientsidebar';
 import Header from './header';
 // import { Support } from '@mui/icons-material';
 import socket from './socket';
+import Lawyersidebar from './lawyersidebar';
 
 function Support() {
 
@@ -89,7 +90,8 @@ function Support() {
   return (
     <>
     {/* <Clientsidebar/> */}
-    <Header/>
+    {/* <Header/> */}
+    <Lawyersidebar/>
       
     <div style={{
       maxWidth: 480,

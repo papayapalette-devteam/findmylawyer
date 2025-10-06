@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import socket from './socket';
-import logo from '../components/counvoImg/image.png'
+// import logo from '../components/counvoImg/image.png'
+import logo from '../components/counvoImg/Counvo Logo-01.png'
 import Swal from 'sweetalert2';
 import api from '../api';
 import { Users } from 'lucide-react';
@@ -284,7 +285,7 @@ const[missingtext,setmissingtext]=useState('')
       `}</style>
       <header>
         <div className="logo-text">
-          <img src={logo} style={{ height: "50px" }} alt="logo" />
+          <img src={logo} style={{ height: "150px" }} alt="logo" />
          
         </div>
         {screenWidth < 769 && (

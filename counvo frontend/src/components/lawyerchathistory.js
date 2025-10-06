@@ -198,6 +198,7 @@ function LawyerChatHistory() {
             padding:"20px"
             // background: '#fff',
           }}
+          className="main-content"
         >
           <h2>Your Clients</h2>
           <div className="lawyers-grid">

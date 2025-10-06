@@ -45,8 +45,6 @@ exports.getcase_type = async (req, res) => {
 
 
 
-
-
 exports.session_time = async (req, res) => {
   try {
     const { user,sessionTime, switchTime } = req.body;
@@ -67,30 +65,56 @@ exports.session_time = async (req, res) => {
 
 
 exports.get_session_time = async (req, res) => {
- try {
+  try {
+    // ✅ Average session time
     const sessionAvg = await ChatTime.aggregate([
       { $match: { sessionTime: { $gt: 0 } } },
       { $group: { _id: null, avgSessionTime: { $avg: "$sessionTime" } } }
     ]);
 
+    // ✅ Average switch time
     const switchAvg = await ChatTime.aggregate([
       { $match: { switchTime: { $gt: 0 } } },
       { $group: { _id: null, avgSwitchTime: { $avg: "$switchTime" } } }
     ]);
 
+    // ✅ Total switch count (all users)
+    const totalSwitches = await ChatTime.countDocuments({ switchTime: { $gt: 0 } });
+
+    // ✅ Switch count per user
+    const userSwitchCounts = await ChatTime.aggregate([
+      { $match: { switchTime: { $gt: 0 } } },
+      { $group: { _id: "$user", switchCount: { $sum: 1 } } }
+    ]);
+
+    // ✅ Total users who switched
+    const totalUsers = userSwitchCounts.length;
+
+    // ✅ Average switches per user
+    const avgSwitchesPerUser = totalUsers > 0 ? (totalSwitches / totalUsers).toFixed(2) : 0;
+
+    // ✅ Convert seconds to minutes
     const avgSessionSec = sessionAvg[0]?.avgSessionTime || 0;
     const avgSwitchSec = switchAvg[0]?.avgSwitchTime || 0;
 
-    // Convert seconds to minutes (rounded to 2 decimals)
     const averagesInMinutes = {
       avgSessionTime: +(avgSessionSec / 60).toFixed(2),
-      avgSwitchTime: +(avgSwitchSec / 60).toFixed(2)
+      avgSwitchTime: +(avgSwitchSec / 60).toFixed(2),
+      avgSwitchesPerUser: Number(avgSwitchesPerUser)
     };
 
-    res.status(200).json({ success: true, data: averagesInMinutes });
+    res.status(200).json({
+      success: true,
+      data: {
+        averages: averagesInMinutes,
+        totalSwitches,
+        totalUsers
+      }
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error("❌ Error in get_session_time:", err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 

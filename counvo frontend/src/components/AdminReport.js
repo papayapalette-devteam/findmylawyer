@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend, LineChart, Line,
 } from "recharts";
-import {
-  Clock, Repeat, Timer, Users, Smartphone, DollarSign,
-} from "lucide-react";
+import {Clock, Repeat, Timer, Users,} from "lucide-react";
 import "../css/adminreport.css"; 
 import Adminsidebar from "./adminsidebar";
 import api from '../api';
@@ -38,6 +36,8 @@ const AdminReport = () => {
 
       const[session_time,setsession_time]=useState([])
       const[switch_time,setswitch_time]=useState([])
+       const[average_switch,setaverage_switch]=useState([])
+
     const get_session_time=async()=>
     {
       try {
@@ -45,8 +45,9 @@ const AdminReport = () => {
         console.log(resp);
        
 
-      setsession_time(resp.data.data.avgSessionTime)
-      setswitch_time(resp.data.data.avgSwitchTime)
+      setsession_time(resp.data.data.averages.avgSessionTime)
+      setswitch_time(resp.data.data.averages.avgSwitchTime)
+      setaverage_switch(resp.data.data.averages.avgSwitchesPerUser)
         
       } catch (error) {
         console.log(error);
@@ -60,7 +61,7 @@ const AdminReport = () => {
     },[])
 
 
-   const [chatSummary, setChatSummary] = useState([]);
+  const [chatSummary, setChatSummary] = useState([]);
   const [expandedLawyers, setExpandedLawyers] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const lawyersPerPage = 5; // adjust as needed
@@ -92,7 +93,7 @@ const AdminReport = () => {
 
 
   
-  const [userSummary, setUserSummary] = useState([]);
+const [userSummary, setUserSummary] = useState([]);
 const [expandedUsers, setExpandedUsers] = useState({});
 const [currentPageUser, setCurrentPageUser] = useState(1);
 const usersPerPage = 5; // adjust as needed
@@ -179,7 +180,7 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
       { fee: "High", retention: 20 },
     ],
     avgSwitching: 1.8,
-    totalUserChats: 520
+    totalUserChats: average_switch
   }
 
   const COLORS = ["#4F46E5", "#22C55E", "#F59E0B", "#EF4444"];
@@ -214,7 +215,7 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
         </div>
         <div className="card">
           <Users className="icon blue" />
-          <p className="label">Total User Chats</p>
+          <p className="label">Average User Switch</p>
           <h3 className="value">{data.totalUserChats}</h3>
         </div>
       </div>
@@ -225,28 +226,7 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
         <p className="big-value">{data.timeToFirstConsultation} Minutes</p>
       </div>
 
-      {/* Acquisition Source */}
-      <div className="card full">
-        <h3 className="title">Customer Acquisition Source</h3>
-        <div className="chart">
-          <ResponsiveContainer>
-            <PieChart>
-              <Pie
-                data={data.acquisitionSource}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={100}
-                label
-              >
-                {data.acquisitionSource.map((entry, index) => (
-                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+     
 
       {/* Case Type */}
       <div className="card full">

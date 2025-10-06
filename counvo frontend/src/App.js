@@ -56,7 +56,7 @@ function App() {
       <Route path='/aboutus' element={<AboutUs/>}></Route>
       <Route path='/contactus' element={<ContactUs/>}></Route>
       <Route path='/allchat' element={<Allchat/>}></Route>
-      <Route path='/lawyerchathistory' element={<LawyerChatHistory/>}></Route>
+      <Route path='/lawyerchathistory' element={<ProtectedRoute1><LawyerChatHistory/></ProtectedRoute1>}></Route>
       <Route path='/privacy-policy' element={<Privacyolicy/>}></Route>
       <Route path='/shipping-policy' element={<ShippingPolicy/>}></Route>
       <Route path='/cancellation-policy' element={<CancelliationPolicy/>}></Route>

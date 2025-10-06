@@ -186,17 +186,17 @@ function LawyerChatHistory() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f6f7fb' }}>
-      <Header />
+   <Lawyersidebar />
       <div style={{ display: 'flex' }}>
-        <Lawyersidebar />
+       
 
         <div
           style={{
             flex: 1,
-            padding: 32,
-            background: '#fff',
-            maxWidth: '1000px',
-            margin: '0 auto'
+            marginLeft: "20%",
+            marginTop:"7%",
+            padding:"20px"
+            // background: '#fff',
           }}
         >
           <h2>Your Clients</h2>

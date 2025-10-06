@@ -206,80 +206,7 @@ and notices from the Income Tax Department.`
 ];
 
 
-const expertServices = [
-  {
-    title: "Online Consultation with a Lawyer",
-    description: "Get expert legal advice from the comfort of your home.",
-    img: "https://assets.vakilsearch.com/live-images/service1.svg",
-    gradient: "olc-service-gradient-right",
-    labelGradient: "olc-service-label-gradient-right",
-    cardRadius: "olc-service-card-radius-right",
-    labelRadius: "olc-service-label-radius-right",
-  },
-  {
-    title: "Documentation and Expert Professional",
-    description: "Access expert assistance for all your legal documentation needs.",
-    img: "https://assets.vakilsearch.com/live-images/service2.svg",
-    gradient: "olc-service-gradient-left",
-    labelGradient: "olc-service-label-gradient-left",
-    cardRadius: "olc-service-card-radius-left",
-    labelRadius: "olc-service-label-radius-left",
-  },
-  {
-    title: "Check Your Challan Status",
-    description: "Stay informed about your challan status with our easy-to-use service.",
-    img: "https://assets.vakilsearch.com/live-images/service3.svg",
-    gradient: "olc-service-gradient-right",
-    labelGradient: "olc-service-label-gradient-right",
-    cardRadius: "olc-service-card-radius-right",
-    labelRadius: "olc-service-label-radius-right",
-  },
-  {
-    title: "File a Complaint",
-    description: "File legal complaints with guidance and support.",
-    img: "https://assets.vakilsearch.com/live-images/service4.svg",
-    gradient: "olc-service-gradient-left",
-    labelGradient: "olc-service-label-gradient-left",
-    cardRadius: "olc-service-card-radius-left",
-    labelRadius: "olc-service-label-radius-left",
-  },
-  {
-    title: "Send a Legal Notice",
-    description: "Ensure your legal notices are drafted and delivered correctly.",
-    img: "https://assets.vakilsearch.com/live-images/service5.svg",
-    gradient: "olc-service-gradient-right",
-    labelGradient: "olc-service-label-gradient-right",
-    cardRadius: "olc-service-card-radius-right",
-    labelRadius: "olc-service-label-radius-right",
-  },
-  {
-    title: "Get Bail",
-    description: "Receive prompt assistance with bail applications and processes.",
-    img: "https://assets.vakilsearch.com/live-images/service6.svg",
-    gradient: "olc-service-gradient-left",
-    labelGradient: "olc-service-label-gradient-left",
-    cardRadius: "olc-service-card-radius-left",
-    labelRadius: "olc-service-label-radius-left",
-  },
-  {
-    title: "Property Dispute Support",
-    description: "Get expert help for resolving property-related disputes.",
-    img: "https://assets.vakilsearch.com/live-images/service7.svg",
-    gradient: "olc-service-gradient-right",
-    labelGradient: "olc-service-label-gradient-right",
-    cardRadius: "olc-service-card-radius-right",
-    labelRadius: "olc-service-label-radius-right",
-  },
-  {
-    title: "Family Law Support",
-    description: "Opt for comprehensive support for family law matters, including divorce and custody issues.",
-    img: "https://assets.vakilsearch.com/live-images/service8.svg",
-    gradient: "olc-service-gradient-left",
-    labelGradient: "olc-service-label-gradient-left",
-    cardRadius: "olc-service-card-radius-left",
-    labelRadius: "olc-service-label-radius-left",
-  },
-];
+
 
 
 
@@ -341,124 +268,9 @@ const whyZolvitCards = [
 ];
 
 
-const cities = [
-  "Chennai",
-  "Madurai",
-  "Cochin",
-  "Bangalore",
-  "Coimbatore",
-  "Lucknow",
-  "Kolkata",
-  "Delhi",
-  "Hyderabad",
-  "Mumbai",
-  "Chandigarh",
-  "Pune",
-];
 
 
-const faqs = [
-  {
-    question: "What services do lawyers provide?",
-    answer:
-      "Lawyers offer legal advice, represent clients in court, draft and review contracts, help with dispute resolution, and provide guidance on compliance, documentation, and negotiations across various areas of law.",
-  },
-  {
-    question: "What is legal representation?",
-    answer:
-      "Legal representation means having a qualified lawyer act on your behalf in legal matters, ensuring your rights are protected and your case is presented effectively in legal proceedings.",
-  },
-  {
-    question: "How do I know if I need a lawyer for my legal issue?",
-    answer:
-      "If your issue involves significant financial, personal, or business consequences, or you’re unsure about your rights or obligations, it’s wise to consult a lawyer for guidance.",
-  },
-  {
-    question: "What is the role of a lawyer in a trial?",
-    answer:
-      "A lawyer presents evidence, examines witnesses, makes legal arguments, and advocates for your interests throughout the trial process.",
-  },
-  {
-    question: "What are the common types of legal cases lawyers handle?",
-    answer:
-      "Common cases include family law, property disputes, civil litigation, business matters, criminal defense, consumer rights, employment law, intellectual property, and constitutional issues.",
-  },
-  {
-    question: "How does the legal consultation process work?",
-    answer:
-      "You provide details about your issue, schedule a consultation, discuss your case with a lawyer, receive initial advice, and learn about your legal options and next steps.",
-  },
-  {
-    question: "What is the importance of legal advice?",
-    answer:
-      "Legal advice helps you understand your rights, avoid costly mistakes, and make informed decisions, ensuring you’re protected in legal matters.",
-  },
-  {
-    question: "What should I bring to my first meeting with a lawyer?",
-    answer:
-      "Bring all relevant documents, contracts, correspondence, identification, and a summary of your issue to help the lawyer understand your situation.",
-  },
-  {
-    question: "How does the appeal process work in a legal case?",
-    answer:
-      "If you disagree with a court’s decision, your lawyer can help file an appeal to a higher court, presenting legal arguments for why the decision should be reconsidered.",
-  },
-  {
-    question: "What is a legal brief?",
-    answer:
-      "A legal brief is a written document prepared by a lawyer outlining the facts, legal arguments, and supporting laws or precedents for a case.",
-  },
-  {
-    question: "How can I ensure my lawyer acts ethically?",
-    answer:
-      "Choose a licensed lawyer, check their credentials, read reviews, and ensure they follow professional codes of conduct. You have the right to report unethical behavior to the relevant bar association.",
-  },
-  {
-    question: "What is a deposition in legal proceedings?",
-    answer:
-      "A deposition is a formal, out-of-court testimony given under oath, where lawyers question witnesses and record their answers for use in court.",
-  },
-  {
-    question: "What are my rights as a client when working with a lawyer?",
-    answer:
-      "You have the right to confidentiality, clear communication, competent representation, and to make decisions about your case. You can also change lawyers if needed.",
-  },
-  {
-    question: "What is the importance of case law in legal decisions?",
-    answer:
-      "Case law, or judicial precedents, guides courts in interpreting laws and ensures consistency in legal decisions.",
-  },
-  {
-    question: "How do lawyers protect intellectual property?",
-    answer:
-      "Lawyers help register patents, trademarks, and copyrights, draft licensing agreements, and represent clients in infringement disputes.",
-  },
-  {
-    question: "How can I find a qualified lawyer for my case?",
-    answer:
-      "Research online, seek referrals, check credentials, read client reviews, and consult with lawyers to find one with relevant experience for your needs.",
-  },
-  {
-    question: "What should I consider when choosing a lawyer?",
-    answer:
-      "Consider their experience, expertise, communication style, fees, reputation, and your comfort level with them.",
-  },
-  {
-    question: "What is the difference between a lawyer and an attorney?",
-    answer:
-      "In most contexts, the terms are used interchangeably. In some regions, an attorney specifically refers to someone qualified to represent clients in court.",
-  },
-  {
-    question: "What are legal consultation fees?",
-    answer:
-      "Fees vary by lawyer, case complexity, and location. Some offer free initial consultations, while others charge a fixed or hourly rate.",
-  },
-  {
-    question: "How does a contingency fee arrangement work?",
-    answer:
-      "In a contingency arrangement, the lawyer is paid a percentage of the amount recovered if you win the case. If you lose, you may not owe legal fees, but could still be responsible for other costs.",
-  },
-];
+
 
 const categories = [
   {
@@ -793,6 +605,33 @@ const [isAccepted, setIsAccepted] = useState(false);
   }, [userData?.user._id, chatLawyer]);
 
 
+  const [loginTime, setLoginTime] = useState(Date.now());
+
+
+useEffect(() => {
+  if (userData?.user._id) {
+    // Record login time in milliseconds
+    setLoginTime(Date.now());
+    console.log("✅ User logged in at:", new Date(Date.now()).toLocaleString());
+  }
+}, [userData?.user._id]);
+
+
+
+const [firstMessageSent, setFirstMessageSent] = useState(false);
+
+const save_first_chat_time = async (chattime) => {
+  try {
+    const response = await api.post('api/admin/first_chat_time', {
+      userId: userData?.user?._id,
+      timeToFirstChatMs: chattime,
+    });
+    console.log("First chat time saved:", response.data);
+  } catch (error) {
+    console.error("Error saving first chat time:", error);
+  }
+};
+
 
   const handleSendMessage = (text, lawyer) => {
   // ✅ first set state for later renders
@@ -815,6 +654,14 @@ const [isAccepted, setIsAccepted] = useState(false);
     });
     return;
   }
+
+ if (!firstMessageSent) {
+    const timeToFirstChatMs = Date.now() - loginTime;
+    console.log("⏱ Time to first chat:", timeToFirstChatMs, "ms");
+    save_first_chat_time(timeToFirstChatMs)
+    setFirstMessageSent(true);
+  }
+
 
   const timestamp = new Date().toISOString();
 

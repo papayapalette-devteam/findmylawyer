@@ -126,7 +126,28 @@ const currentUsers = userSummary.slice(indexOfFirstUser, indexOfLastUser);
 const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
 
 
+ const[get_first_chat_time_data,setget_first_chat_time_data]=useState([])
 
+ const get_first_chat_time=async()=>
+    {
+      try {
+        const resp=await api.get('api/admin/first_chat_time')
+        setget_first_chat_time_data(resp.data.averageTimeMinutes)
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+
+   
+    
+
+    useEffect(()=>
+    {
+      get_first_chat_time()
+
+    },[])
 
     
 
@@ -134,7 +155,7 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
     avgTimeToSwitch: switch_time,
     repeatInteractionsPercent: 45,
     avgSessionDuration: session_time,
-    timeToFirstConsultation: "2 days",
+    timeToFirstConsultation: get_first_chat_time_data,
     acquisitionSource: [
       { name: "Ads", value: 40 },
       { name: "Referral", value: 30 },
@@ -162,6 +183,10 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
   }
 
   const COLORS = ["#4F46E5", "#22C55E", "#F59E0B", "#EF4444"];
+
+
+ 
+
 
   return (
     <div>
@@ -197,7 +222,7 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
       {/* Time to First Consultation */}
       <div className="card full">
         <h3 className="title">Time Between First Login and First Consultation</h3>
-        <p className="big-value">{data.timeToFirstConsultation}</p>
+        <p className="big-value">{data.timeToFirstConsultation} Minutes</p>
       </div>
 
       {/* Acquisition Source */}
@@ -301,7 +326,8 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
                         <div>
                           <p className="user-name">{user.userName}</p>
                           <p className="user-stats">
-                            Messages: {user.totalMessages} | Duration: {user.durationMinutes} min
+                            Messages: {user.totalMessages}
+                             {/* | Duration: {user.durationMinutes} min */}
                           </p>
                         </div>
                       </div>
@@ -376,7 +402,9 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
                   <div>
                     <p className="lawyer-name">{lawyer.lawyerName}</p>
                     <p className="lawyer-stats">
-                      Messages: {lawyer.totalMessages} | Duration: {Math.round(lawyer.durationMinutes)} min | Sessions: {lawyer.sessionCount}
+                      Messages: {lawyer.totalMessages}
+                       {/* | Duration: {Math.round(lawyer.durationMinutes)} min */}
+                        | Sessions: {lawyer.sessionCount}
                     </p>
                   </div>
                 </div>
@@ -413,41 +441,10 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
       )}
     </div>
 
-      {/* Drop-off */}
-      <div className="card">
-        <DollarSign className="icon red" />
-        <h3 className="title small">Drop-off After Price Discovery</h3>
-        <p className="value">{data.dropOffAfterPrice}%</p>
-      </div>
+  
 
-      {/* Retention vs Fee */}
-      <div className="card full">
-        <h3 className="title">Retention vs Fee Charged</h3>
-        <div className="chart">
-          <ResponsiveContainer>
-            <LineChart data={data.retentionVsFee}>
-              <XAxis dataKey="fee" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="retention"
-                stroke="#22C55E"
-                strokeWidth={3}
-                name="Retention %"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
 
-      {/* Average Switching */}
-      <div className="card">
-        <Smartphone className="icon cyan" />
-        <h3 className="title small">Average Switching</h3>
-        <p className="value">{data.avgSwitching}</p>
-      </div>
+    
     </div>
 
     </main>

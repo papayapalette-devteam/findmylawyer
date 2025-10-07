@@ -194,7 +194,21 @@ module.exports = (io) => {
 socket.on('chatAccepted', ({ clientId }) => {
   const lawyerId = socket.userId; // because this socket is lawyer
   const clientSocketId = onlineClients[clientId];
-console.log("welcome");
+
+
+  if (clientSocketId) {
+    // Notify the client that the lawyer accepted the chat
+    io.to(clientSocketId).emit('chatAccepted', { lawyerId });
+    console.log(`✅ Lawyer ${lawyerId} accepted chat with Client ${clientId}`);
+  } else {
+    console.log(`⚠️ Client ${clientId} not online to receive chatAccepted`);
+  }
+});
+
+socket.on('chatRejected', ({ clientId }) => {
+  const lawyerId = socket.userId; // because this socket is lawyer
+  const clientSocketId = onlineClients[clientId];
+
 
   if (clientSocketId) {
     // Notify the client that the lawyer accepted the chat

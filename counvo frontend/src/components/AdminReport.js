@@ -78,6 +78,8 @@ const AdminReport = () => {
     fetchData();
   }, []);
 
+  
+
   const toggleCollapse = (lawyerId) => {
     setExpandedLawyers((prev) => ({
       ...prev,
@@ -307,7 +309,7 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
                           <p className="user-name">{user.userName}</p>
                           <p className="user-stats">
                             Messages: {user.totalMessages}
-                             {/* | Duration: {user.durationMinutes} min */}
+                             | Duration: {user.durationMinutes} min
                           </p>
                         </div>
                       </div>
@@ -358,11 +360,11 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
           className="chat-card-header"
           onClick={() => toggleCollapseUser(user.userId)}
         >
-          <div className="user-info">
+          <div className="lawyer-info">
             <div className="avatar">{user?.userName?.charAt(0)}</div>
             <div>
-              <h2 className="user-name">{user?.userName}</h2>
-              <p className="user-stats">
+              <h2 className="lawyer-name">{user?.userName}</h2>
+              <p className="lawyer-stats">
                 Total Lawyers: {user?.totalLawyers} | Total Chats: {totalChats}
               </p>
             </div>
@@ -376,14 +378,14 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
         {expandedUsers[user.userId] && (
           <div className="lawyer-list">
             {user.lawyers.map((lawyer) => (
-              <div key={lawyer.lawyerId} className="lawyer-card">
-                <div className="lawyer-info">
-                  <div className="lawyer-avatar">{lawyer.lawyerName.charAt(0)}</div>
+              <div key={lawyer.lawyerId} className="user-card">
+                <div className="user-info">
+                  <div className="user-avatar">{lawyer.lawyerName.charAt(0)}</div>
                   <div>
-                    <p className="lawyer-name">{lawyer.lawyerName}</p>
-                    <p className="lawyer-stats">
+                    <p className="user-name">{lawyer.lawyerName}</p>
+                    <p className="user-stats">
                       Messages: {lawyer.totalMessages}
-                       {/* | Duration: {Math.round(lawyer.durationMinutes)} min */}
+                       | Duration: {Math.round(lawyer.durationMinutes)} min
                         | Sessions: {lawyer.sessionCount}
                     </p>
                   </div>

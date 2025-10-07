@@ -887,7 +887,7 @@ useEffect(() => {
 
 
 useEffect(() => {
-  console.log("hello");
+  
   
   socket.on("chatAccepted", ({ lawyerId }) => {
     if (chatLawyer?._id === lawyerId) {
@@ -897,7 +897,17 @@ useEffect(() => {
   return () => socket.off("chatAccepted");
 }, [chatLawyer]);
 
-console.log(isAccepted);
+
+useEffect(() => {
+  
+  
+  socket.on("chatRejected", ({ lawyerId }) => {
+    if (chatLawyer?._id === lawyerId) {
+      setIsAccepted(true); // ✅ now allow sending messages
+    }
+  });
+  return () => socket.off("chatAccepted");
+}, [chatLawyer]);
 
 
 

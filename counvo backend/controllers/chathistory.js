@@ -84,9 +84,8 @@ const getChatSummary = async (req, res) => {
     const limit = parseInt(req.query.limit) || 5;
     const skip = (page - 1) * limit;
 
-    // Step 1: Aggregate chat summary
     const agg = [
-      // only lawyer-user chats
+      // Step 1: Consider only Lawyer–User chats
       {
         $match: {
           $or: [
@@ -95,7 +94,7 @@ const getChatSummary = async (req, res) => {
           ]
         }
       },
-      // normalize fields
+      // Step 2: Normalize lawyer and user fields
       {
         $project: {
           lawyer: {
@@ -107,44 +106,87 @@ const getChatSummary = async (req, res) => {
           timestamp: 1
         }
       },
-      // group per lawyer-user pair
+      // Step 3: Sort by lawyer, user, and timestamp
       {
-        $group: {
-          _id: { lawyer: "$lawyer", user: "$user" },
-          firstMessage: { $min: "$timestamp" },
-          lastMessage: { $max: "$timestamp" },
-          totalMessages: { $sum: 1 }
+        $sort: { lawyer: 1, user: 1, timestamp: 1 }
+      },
+      // Step 4: Calculate previous message timestamp using $setWindowFields
+      {
+        $setWindowFields: {
+          partitionBy: { lawyer: "$lawyer", user: "$user" },
+          sortBy: { timestamp: 1 },
+          output: {
+            prevTime: {
+              $shift: {
+                output: "$timestamp",
+                by: -1
+              }
+            }
+          }
         }
       },
-      // compute duration
+      // Step 5: Determine time gap (in minutes) between messages
       {
-        $project: {
-          lawyer: "$_id.lawyer",
-          user: "$_id.user",
-          totalMessages: 1,
-          durationMinutes: {
-            $divide: [
-              { $subtract: ["$lastMessage", "$firstMessage"] },
-              1000 * 60
+        $addFields: {
+          timeGapMinutes: {
+            $divide: [{ $subtract: ["$timestamp", "$prevTime"] }, 1000 * 60]
+          },
+          newSession: {
+            $cond: [
+              { $gt: [{ $divide: [{ $subtract: ["$timestamp", "$prevTime"] }, 1000 * 60] }, 10] },
+              1,
+              0
             ]
           }
         }
       },
-      // group by lawyer
+      // Step 6: Generate a session number
+      {
+        $setWindowFields: {
+          partitionBy: { lawyer: "$lawyer", user: "$user" },
+          sortBy: { timestamp: 1 },
+          output: {
+            sessionNumber: { $sum: "$newSession" }
+          }
+        }
+      },
+      // Step 7: Group messages by session
+      {
+        $group: {
+          _id: { lawyer: "$lawyer", user: "$user", session: "$sessionNumber" },
+          start: { $min: "$timestamp" },
+          end: { $max: "$timestamp" },
+          totalMessages: { $sum: 1 }
+        }
+      },
+      // Step 8: Calculate each session’s duration in minutes
+      {
+        $project: {
+          lawyer: "$_id.lawyer",
+          user: "$_id.user",
+          session: "$_id.session",
+          totalMessages: 1,
+          durationMinutes: {
+            $divide: [{ $subtract: ["$end", "$start"] }, 1000 * 60]
+          }
+        }
+      },
+      // Step 9: Group by lawyer → collect users and compute averages
       {
         $group: {
           _id: "$lawyer",
+          totalSessions: { $sum: 1 },
+          averageChatTime: { $avg: "$durationMinutes" },
           users: {
             $push: {
               userId: "$user",
               totalMessages: "$totalMessages",
               durationMinutes: { $round: ["$durationMinutes", 2] }
             }
-          },
-          totalUsers: { $sum: 1 }
+          }
         }
       },
-      // lookup lawyer info
+      // Step 10: Lookup lawyer info
       {
         $lookup: {
           from: "lawyers",
@@ -154,7 +196,7 @@ const getChatSummary = async (req, res) => {
         }
       },
       { $unwind: "$lawyer" },
-      // lookup user info for each user
+      // Step 11: Lookup user info
       {
         $lookup: {
           from: "users",
@@ -163,7 +205,7 @@ const getChatSummary = async (req, res) => {
           as: "userDetails"
         }
       },
-      // merge user details
+      // Step 12: Merge user details
       {
         $addFields: {
           users: {
@@ -198,40 +240,47 @@ const getChatSummary = async (req, res) => {
           }
         }
       },
-      // final projection
+      // Step 13: Final projection
       {
         $project: {
           lawyerId: "$lawyer._id",
           lawyerName: { $concat: ["$lawyer.firstName", " ", "$lawyer.lastName"] },
-          totalUsers: 1,
+          totalSessions: 1,
+          averageChatTime: { $round: ["$averageChatTime", 2] },
           users: 1
         }
       },
-      // sort by lawyerName
+      // Step 14: Sort alphabetically
       { $sort: { lawyerName: 1 } }
     ];
 
-    // Step 2: Get total lawyers count for pagination
-    const totalLawyers = (await Message.aggregate([
-      ...agg.slice(0, -2), // remove final projection & sort
-      { $group: { _id: "$lawyer" } } // count unique lawyers
-    ])).length;
+    // Step 15: Pagination
+    const totalLawyers = (
+      await Message.aggregate([
+        ...agg.slice(0, 9),
+        { $group: { _id: "$lawyer" } }
+      ])
+    ).length;
 
     const totalPages = Math.ceil(totalLawyers / limit);
 
-    // Step 3: Apply skip & limit
     const result = await Message.aggregate([
       ...agg,
       { $skip: skip },
       { $limit: limit }
     ]);
 
-    res.status(200).json({ chatSummary: result, totalPages, currentPage: page });
+    res.status(200).json({
+      chatSummary: result,
+      totalPages,
+      currentPage: page
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Failed to fetch chat report" });
+    res.status(500).send({ error: "Failed to fetch chat summary" });
   }
 };
+
 
 const getUserChatSummary = async (req, res) => {
   try {

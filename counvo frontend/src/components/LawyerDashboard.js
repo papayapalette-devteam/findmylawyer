@@ -1499,6 +1499,9 @@ useEffect(() => {
           fontWeight: 600
         }}
         onClick={() => {
+
+           socket.emit("chatRejected", { clientId });
+
           setNeedsAccept(prev => ({ ...prev, [clientId]: false }));
           if (selectedClient && selectedClient._id === clientId) {
             setMessages([]);
@@ -1511,6 +1514,8 @@ useEffect(() => {
             timestamp: new Date().toISOString()
           });
         }}
+
+        
       >
         Reject
       </button>

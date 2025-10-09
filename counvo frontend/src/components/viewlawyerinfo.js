@@ -14,6 +14,7 @@ import {
 const LawyerStepper = ({ selectedLawyer }) => {
     const [activeStep, setActiveStep] = React.useState(0);
 
+console.log(selectedLawyer);
 
 
 const steps = [
@@ -88,17 +89,17 @@ const steps = [
     label: '💼 Work & Bar Details',
     content: (
       <Paper elevation={2} sx={{ p: 2, bgcolor: '#fff8e1', borderRadius: 2 }}>
-        <Typography><strong>🪪 Bar Enrolment No:</strong> {selectedLawyer.barEnrolment}</Typography>
-        <Typography><strong>🌐 Bar Council State:</strong> {selectedLawyer.barState}</Typography>
-        <Typography><strong>📅 Registration Year:</strong> {selectedLawyer.barYear}</Typography>
-        <Typography><strong>🔖 AIBE No:</strong> {selectedLawyer.aibeNo}</Typography>
-        <Typography><strong>🎯 Specializations:</strong> {selectedLawyer.specializations}</Typography>
-        <Typography><strong>🗣️ Languages:</strong> {selectedLawyer.languages?.map(l => l.label).join(', ')}</Typography>
+        <Typography><strong>🪪 Bar Enrolment No:</strong> {selectedLawyer?.barEnrolment}</Typography>
+        <Typography><strong>🌐 Bar Council State:</strong> {selectedLawyer?.barState}</Typography>
+        <Typography><strong>📅 Registration Year:</strong> {selectedLawyer?.barYear}</Typography>
+        <Typography><strong>🔖 AIBE No:</strong> {selectedLawyer?.aibeNo}</Typography>
+        <Typography><strong>🎯 Specializations:</strong> {selectedLawyer?.specializations.map(l => l.label).join(', ')}</Typography>
+        <Typography><strong>🗣️ Languages:</strong> {selectedLawyer?.languages?.map(l => l.label).join(', ')}</Typography>
         <Typography><strong>⚖️ Practice Types:</strong> {selectedLawyer.practice_type}</Typography>
-        <Typography><strong>🏢 Law Firm:</strong> {selectedLawyer.lawfarm_name}</Typography>
-        <Typography><strong>📍 Office:</strong> {selectedLawyer.office_address}</Typography>
-        <Typography><strong>🪪 Bar Membership:</strong> {selectedLawyer.bar_membership}</Typography>
-        <Typography><strong>📝 Bio:</strong> {selectedLawyer.professional_bio}</Typography>
+        <Typography><strong>🏢 Law Firm:</strong> {selectedLawyer?.lawfarm_name}</Typography>
+        <Typography><strong>📍 Office:</strong> {selectedLawyer?.office_address}</Typography>
+        <Typography><strong>🪪 Bar Membership:</strong> {selectedLawyer?.bar_membership}</Typography>
+        <Typography><strong>📝 Bio:</strong> {selectedLawyer?.professional_bio}</Typography>
         {selectedLawyer.proofofpractice && (
           <Box mt={1} position="relative" width="120px">
             <img

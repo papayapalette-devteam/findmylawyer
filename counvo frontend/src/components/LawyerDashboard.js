@@ -460,7 +460,29 @@ const [clientMap, setClientMap] = useState({}); // { clientId: clientName, ... }
 
 
 
+// useEffect(() => {
+//   if ("Notification" in window && Notification.permission !== "granted") {
+//     Notification.requestPermission();
+//   }
+// }, []);
+
+// useEffect(() => {
+//   const clientId = Object.keys(needsAccept).find(id => needsAccept[id]);
+//   if (clientId && "Notification" in window && Notification.permission === "granted") {
+//     const latestMsg =
+//       messageMap[clientId]?.length > 0
+//         ? messageMap[clientId][messageMap[clientId].length - 1].text
+//         : "This client wants to chat with you.";
+//     const notification = new Notification("Chat Request", {
+//       body: latestMsg,
+//       icon: "/logo.png" // optional icon path
+//     });
+//     notification.onclick = () => window.focus();
+//   }
+// }, [needsAccept, messageMap]);
+
 useEffect(() => {
+  // Request permission for notifications
   if ("Notification" in window && Notification.permission !== "granted") {
     Notification.requestPermission();
   }
@@ -476,13 +498,11 @@ useEffect(() => {
       : "This client wants to chat with you.";
 
   const isMobile =
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
+    /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
 
   if ("Notification" in window && Notification.permission === "granted") {
     if (isMobile && navigator.serviceWorker) {
-      // Mobile / PWA: service worker notification
+      // Mobile & background: show notification via service worker
       navigator.serviceWorker.ready.then((registration) => {
         registration.showNotification("Chat Request", {
           body: latestMsg,
@@ -490,7 +510,7 @@ useEffect(() => {
         });
       });
     } else {
-      // Desktop: direct notification
+      // Desktop or mobile foreground: show notification directly
       new Notification("Chat Request", {
         body: latestMsg,
         icon: "/logo.png",
@@ -498,9 +518,6 @@ useEffect(() => {
     }
   }
 }, [needsAccept, messageMap]);
-
-
-
 
 
   //===================================== chat code end==================================================================

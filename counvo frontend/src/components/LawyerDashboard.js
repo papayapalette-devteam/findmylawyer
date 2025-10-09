@@ -460,26 +460,40 @@ const [clientMap, setClientMap] = useState({}); // { clientId: clientName, ... }
 
 
 
-// useEffect(() => {
-//   if ("Notification" in window && Notification.permission !== "granted") {
-//     Notification.requestPermission();
-//   }
-// }, []);
+useEffect(() => {
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+}, []);
 
-// useEffect(() => {
-//   const clientId = Object.keys(needsAccept).find(id => needsAccept[id]);
-//   if (clientId && "Notification" in window && Notification.permission === "granted") {
-//     const latestMsg =
-//       messageMap[clientId]?.length > 0
-//         ? messageMap[clientId][messageMap[clientId].length - 1].text
-//         : "This client wants to chat with you.";
-//     const notification = new Notification("Chat Request", {
-//       body: latestMsg,
-//       icon: "/logo.png" // optional icon path
-//     });
-//     notification.onclick = () => window.focus();
-//   }
-// }, [needsAccept, messageMap]);
+useEffect(() => {
+  const clientId = Object.keys(needsAccept).find(id => needsAccept[id]);
+  if (!clientId) return;
+
+  const latestMsg =
+    messageMap[clientId]?.length > 0
+      ? messageMap[clientId][messageMap[clientId].length - 1].text
+      : "This client wants to chat with you.";
+
+  // ✅ Desktop fallback
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification("Chat Request", {
+      body: latestMsg,
+      icon: "/logo.png",
+    });
+  }
+
+  // ✅ Mobile + PWA (via service worker)
+  if (navigator.serviceWorker && Notification.permission === "granted") {
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.showNotification("Chat Request", {
+        body: latestMsg,
+        icon: "/logo.png",
+      });
+    });
+  }
+}, [needsAccept, messageMap]);
+
 
 
 

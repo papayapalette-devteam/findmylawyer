@@ -460,26 +460,26 @@ const [clientMap, setClientMap] = useState({}); // { clientId: clientName, ... }
 
 
 
-useEffect(() => {
-  if ("Notification" in window && Notification.permission !== "granted") {
-    Notification.requestPermission();
-  }
-}, []);
+// useEffect(() => {
+//   if ("Notification" in window && Notification.permission !== "granted") {
+//     Notification.requestPermission();
+//   }
+// }, []);
 
-useEffect(() => {
-  const clientId = Object.keys(needsAccept).find(id => needsAccept[id]);
-  if (clientId && "Notification" in window && Notification.permission === "granted") {
-    const latestMsg =
-      messageMap[clientId]?.length > 0
-        ? messageMap[clientId][messageMap[clientId].length - 1].text
-        : "This client wants to chat with you.";
-    const notification = new Notification("Chat Request", {
-      body: latestMsg,
-      icon: "/logo.png" // optional icon path
-    });
-    notification.onclick = () => window.focus();
-  }
-}, [needsAccept, messageMap]);
+// useEffect(() => {
+//   const clientId = Object.keys(needsAccept).find(id => needsAccept[id]);
+//   if (clientId && "Notification" in window && Notification.permission === "granted") {
+//     const latestMsg =
+//       messageMap[clientId]?.length > 0
+//         ? messageMap[clientId][messageMap[clientId].length - 1].text
+//         : "This client wants to chat with you.";
+//     const notification = new Notification("Chat Request", {
+//       body: latestMsg,
+//       icon: "/logo.png" // optional icon path
+//     });
+//     notification.onclick = () => window.focus();
+//   }
+// }, [needsAccept, messageMap]);
 
 
 

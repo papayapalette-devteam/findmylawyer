@@ -7,6 +7,9 @@ import { Box, Button, IconButton, Typography, Chip, Stack } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
+import { FaEye } from 'react-icons/fa';
+import { Offcanvas, } from 'react-bootstrap';
+import LawyerProfileTabs from './viewlawyerinfo';
 
 
 
@@ -80,6 +83,33 @@ function Clients() {
         }
       };
 
+        const [show, setShow] = useState(false);
+         const [selectedLawyer, setSelectedLawyer] = useState(null);
+          const [activeTab1, setActiveTab1] = useState('dashboard');
+
+         const handleShow = (lawyer) => {
+    setSelectedLawyer(lawyer);
+    setActiveTab1('basic');
+    setShow(true);
+  };
+
+  const handleClose = () => {
+    setShow(false);
+    setSelectedLawyer(null);
+  };
+
+      const handleViewLawyer = async (lawyerid) => {
+          try {
+            const resp = await api.get(`api/lawyer/getlawyer/${lawyerid}`);
+            if (resp.status === 200) {
+              handleShow(resp.data);
+           
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        };
+
 
           const columns = [
 
@@ -121,18 +151,29 @@ function Clients() {
             },
             {
               field: 'actions',
-              headerName: 'Actions',
-              width: 100,
-              renderCell: (params) => (
-             <DeleteIcon
-              onClick={() => handledeletelawyer(params.row._id)}
-              style={{ 
-                color: '#d32f2f', 
-                cursor: 'pointer' 
-              }}
-            />
-              ),
-            }
+            headerName: 'Actions',
+            width: 120,
+            renderCell: (params) => (
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <DeleteIcon
+                  onClick={() => handledeletelawyer(params.row._id)}
+                  style={{ color: '#d32f2f', cursor: 'pointer' }}
+                />
+                <button
+                  className="icon-btn black"
+                  onClick={() => handleViewLawyer(params.row._id)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <FaEye />
+                </button>
+      </div>
+    ),
+  },
+
 
           
             
@@ -269,6 +310,15 @@ function Clients() {
                 </Box> */}
 
             </div>
+
+             <Offcanvas show={show} onHide={handleClose} placement="end" className="lawyer-offcanvas">
+                    <Offcanvas.Header closeButton>
+                    </Offcanvas.Header>
+                    <Offcanvas.Body>
+                      {selectedLawyer && <LawyerProfileTabs selectedLawyer={selectedLawyer} />}
+                    </Offcanvas.Body>
+                  </Offcanvas>
+
         </main>
       
     </div>

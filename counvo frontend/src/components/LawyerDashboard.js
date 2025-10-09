@@ -475,24 +475,30 @@ useEffect(() => {
       ? messageMap[clientId][messageMap[clientId].length - 1].text
       : "This client wants to chat with you.";
 
-  // ✅ Desktop fallback
-  if ("Notification" in window && Notification.permission === "granted") {
-    new Notification("Chat Request", {
-      body: latestMsg,
-      icon: "/logo.png",
-    });
-  }
+  const isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
 
-  // ✅ Mobile + PWA (via service worker)
-  if (navigator.serviceWorker && Notification.permission === "granted") {
-    navigator.serviceWorker.ready.then((registration) => {
-      registration.showNotification("Chat Request", {
+  if ("Notification" in window && Notification.permission === "granted") {
+    if (isMobile && navigator.serviceWorker) {
+      // Mobile / PWA: service worker notification
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.showNotification("Chat Request", {
+          body: latestMsg,
+          icon: "/logo.png",
+        });
+      });
+    } else {
+      // Desktop: direct notification
+      new Notification("Chat Request", {
         body: latestMsg,
         icon: "/logo.png",
       });
-    });
+    }
   }
 }, [needsAccept, messageMap]);
+
 
 
 

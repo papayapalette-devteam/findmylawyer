@@ -10,7 +10,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Lottie from "lottie-react";
 import Swal from 'sweetalert2';
-import Header from '../header';
+import Header from '../Layout/header';
 
 
 

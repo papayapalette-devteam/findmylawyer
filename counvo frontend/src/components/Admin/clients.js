@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api';
+import api from '../../api';
 import Adminsidebar from './adminsidebar';
-import Adminpanelheader from './adminpanelheader';
+import Adminpanelheader from '../adminpanelheader';
 import { Visibility, CheckCircle, Cancel } from '@mui/icons-material';
 import { Box, Button, IconButton, Typography, Chip, Stack } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
 import { FaEye } from 'react-icons/fa';
 import { Offcanvas, } from 'react-bootstrap';
-import LawyerProfileTabs from './viewlawyerinfo';
+import LawyerProfileTabs from '../viewlawyerinfo';
 
 
 

@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { FaEnvelope, FaPhoneAlt, FaInstagram, FaFacebookF, FaLinkedinIn } from "react-icons/fa";
-import Header from "./header";
-import Footer from "./footer";
+import Header from "./Layout/header";
+import Footer from "./Layout/footer";
 
 const Colors = {
   primary: "#09316B",

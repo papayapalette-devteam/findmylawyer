@@ -1,6 +1,6 @@
 import React from 'react'
 // import '../css/style.css'
-import Header from '../components/header';
+import Header from './Layout/header';
 
 import { useNavigate } from 'react-router-dom';
 import logo from '../components/counvoImg/WhatsApp Image 2025-06-11 at 14.06.30_494422bf.jpg'

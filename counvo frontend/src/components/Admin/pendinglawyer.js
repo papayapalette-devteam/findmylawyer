@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, IconButton, Typography, Chip, Stack } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Visibility, CheckCircle, Cancel } from '@mui/icons-material';
-import api from '../api';
+import api from '../../api';
 import Adminsidebar from './adminsidebar';
-import Adminpanelheader from './adminpanelheader';
+import Adminpanelheader from '../adminpanelheader';
 import Swal from 'sweetalert2';
 
 const PendingLawyersTable = () => {

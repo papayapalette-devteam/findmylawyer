@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import api from '../api';
 import Swal from 'sweetalert2';
 import Clientsidebar from './clientsidebar';
-import Header from './header';
+import Header from './Layout/header';
 // import { Support } from '@mui/icons-material';
 import socket from './socket';
 import Lawyersidebar from './lawyersidebar';

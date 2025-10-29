@@ -10,7 +10,7 @@ const {
 
 const chatupload=require('../middlewares/chatupload')
 const { getAdminDashboard } = require('../controllers/adminController');
-const  {getchathistory,getallchathistory, uploaddocument, getallchathistoryforrecentchat, getChatSummary, getUserChatSummary}  = require('../controllers/chathistory');
+const  {getchathistory,getallchathistory, uploaddocument, getallchathistoryforrecentchat, getChatSummary, getUserChatSummary, getTypeOfCaseRepeatUsage}  = require('../controllers/chathistory');
 const { addfeedback, addlawyerfeedback } = require('../controllers/feedback');
 const { CaseType, getcase_type, session_time, get_session_time } = require('../controllers/admin_report');
 const { save_first_time_chat, get_first_chat_time } = require('../controllers/calculate_first_chat_time');
@@ -46,6 +46,8 @@ router.get('/session-time',get_session_time)
 
 router.post('/first_chat_time',save_first_time_chat)
 router.get('/first_chat_time',get_first_chat_time)
+
+router.get('/get-TypeOfCase-RepeatUsage',getTypeOfCaseRepeatUsage)
 
 
 module.exports = router;

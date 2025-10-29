@@ -1,7 +1,7 @@
 import React from "react";
 import "../css/TermsAndConditions.css"; // Place the CSS below in this file or use a <style> tag
-import Header from "./header";
-import Footer from "./footer";
+import Header from "./Layout/header";
+import Footer from "./Layout/footer";
 
 const TermsAndConditions = () => (
     <div>

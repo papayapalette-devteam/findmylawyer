@@ -1,8 +1,8 @@
 import React from "react";
 import { useRef,useState,useEffect } from "react";
 import '../css/OnlineLawyerConsultation.css'; // Uncomment after you add the CSS
-import Header from './header';
-import Footer from "./footer";
+import Header from './Layout/header';
+import Footer from "./Layout/footer";
 import socket from './socket';
 import Swal from 'sweetalert2';
 import api from '../api';

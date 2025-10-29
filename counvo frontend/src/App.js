@@ -9,8 +9,8 @@ import ClientDashboard from './components/ClientDashboard';
 import LawyerDashboard from './components/LawyerDashboard';
 import AdminPanel from './components/AdminPanel';
 import LawyerProfileModal from './components/LawyerProfileModel';
-import PendingLawyersTable from './components/pendinglawyer';
-import Clients from './components/clients';
+import PendingLawyersTable from './components/Admin/pendinglawyer';
+import Clients from './components/Admin/clients';
 import Findalawyer from './components/Client/findalawyer';
 import Support from './components/support';
 import ClientProfileModal from './components/Client/clientprofile';
@@ -21,14 +21,14 @@ import ProtectedRoute from './components/authguard';
 import ProtectedRoute1 from './components/authgurard1';
 import AboutUs from './components/aboutus';
 import ContactUs from './components/contactus';
-import Allchat from './components/allchat';
+import Allchat from './components/Admin/allchat';
 import { LawyerFeedbackForm } from './components/lawyerfeedback';
 import CustomerFeedbackForm from './components/customerfeedback';
 import LawyerChatHistory from './components/lawyerchathistory';
 import Privacyolicy from './components/privacy_policy';
 import ShippingPolicy from './components/shipping_policy';
 import CancelliationPolicy from './components/cancellation_policy';
-import AdminReport from './components/AdminReport';
+import AdminReport from './components/Admin/AdminReport';
 
 
 

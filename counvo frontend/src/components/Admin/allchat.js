@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import api from '../api'
-import Adminsidebar from './adminsidebar'
-import '../css/allchat.css'
+import api from '../../api'
+import Adminsidebar from '../Admin/adminsidebar'
+import '../../css/allchat.css'
 function Allchat() {
 
     const[allchat,setallchat]=useState([])
@@ -26,6 +26,7 @@ function Allchat() {
 
     },[])
   
+ 
   
     
 

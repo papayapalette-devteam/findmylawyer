@@ -3,7 +3,7 @@ import Clientsidebar from '../clientsidebar';
 import socket from '../socket';
 import Swal from 'sweetalert2';
 import api from '../../api';
-import Header from '../header';
+import Header from '../Layout/header';
 
 function Findalawyer() {
     const [isLoading, setIsLoading] = useState(false);

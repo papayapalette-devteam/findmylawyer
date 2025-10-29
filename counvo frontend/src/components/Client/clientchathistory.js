@@ -3,7 +3,7 @@ import Clientsidebar from "../clientsidebar";
 import socket from "../socket";
 import Swal from "sweetalert2";
 import api from "../../api";
-import Header from "../header";
+import Header from "../Layout/header";
 import { HiOutlinePaperClip } from "react-icons/hi";
 import { IoSend } from "react-icons/io5";
 import "../Client/css/client_chat_history.css";

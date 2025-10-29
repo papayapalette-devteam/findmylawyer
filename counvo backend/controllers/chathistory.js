@@ -476,8 +476,119 @@ const getUserChatSummary = async (req, res) => {
 
 
 
+const getTypeOfCaseRepeatUsage = async (req, res) => {
+  try {
+    const result = await Message.aggregate([
+      // ✅ Include only messages where receiver is a lawyer
+      { $match: { toModel: "Lawyer" } },
+
+      // ✅ Join lawyer info
+      {
+        $lookup: {
+          from: "lawyers", // check actual collection name
+          localField: "to",
+          foreignField: "_id",
+          as: "lawyerData"
+        }
+      },
+      { $unwind: "$lawyerData" },
+
+      // ✅ Unwind lawyer specializations array (important!)
+      { $unwind: { path: "$lawyerData.specializations", preserveNullAndEmptyArrays: true } },
+
+      // ✅ Sort messages
+      { $sort: { from: 1, to: 1, timestamp: 1 } },
+
+      // ✅ Group by user-lawyer pair and specialization
+      {
+        $group: {
+          _id: { user: "$from", lawyer: "$to", caseType: "$lawyerData.specializations" },
+          messages: { $push: "$timestamp" }
+        }
+      },
+
+      // ✅ Calculate sessions (10-min gap = new session)
+      {
+        $project: {
+          caseType: "$_id.caseType",
+          sessionCount: {
+            $reduce: {
+              input: "$messages",
+              initialValue: { last: null, count: 0 },
+              in: {
+                $let: {
+                  vars: {
+                    diff: {
+                      $cond: [
+                        {
+                          $and: [
+                            { $ne: ["$$value.last", null] },
+                            {
+                              $gte: [
+                                { $subtract: ["$$this", "$$value.last"] },
+                                10 * 60 * 1000 // 10 min
+                              ]
+                            }
+                          ]
+                        },
+                        true,
+                        false
+                      ]
+                    }
+                  },
+                  in: {
+                    last: "$$this",
+                    count: {
+                      $cond: [
+                        "$$diff",
+                        { $add: ["$$value.count", 1] },
+                        "$$value.count"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      // ✅ Add 1 to include the first session
+      {
+        $project: {
+          caseType: 1,
+          sessionCount: { $add: ["$sessionCount.count", 1] }
+        }
+      },
+
+      // ✅ Average sessions per case type (specialization)
+      {
+        $group: {
+          _id: "$caseType",
+          avgSessions: { $avg: "$sessionCount" },
+          totalPairs: { $sum: 1 }
+        }
+      },
+
+      { $sort: { avgSessions: -1 } }
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error generating report:", error);
+    res.status(500).json({ error: "Failed to generate report" });
+  }
+};
+
+
+
+
+
+
+
+
 
 
 module.exports={getchathistory,getallchathistory,uploaddocument,getallchathistoryforrecentchat,getChatSummary,
-  getUserChatSummary
+  getUserChatSummary,getTypeOfCaseRepeatUsage
 }

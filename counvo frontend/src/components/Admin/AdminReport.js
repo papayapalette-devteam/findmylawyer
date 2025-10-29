@@ -3,9 +3,10 @@ import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend, LineChart, Line,
 } from "recharts";
 import {Clock, Repeat, Timer, Users,} from "lucide-react";
-import "../css/adminreport.css"; 
+import "../../css/adminreport.css"; 
 import Adminsidebar from "./adminsidebar";
-import api from '../api';
+import api from '../../api';
+import {  ChevronDown, ChevronUp } from "lucide-react";
 
 const AdminReport = () => {
 
@@ -188,6 +189,27 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
   const COLORS = ["#4F46E5", "#22C55E", "#F59E0B", "#EF4444"];
 
 
+    const [isExpanded, setIsExpanded] = useState(false);
+
+
+    const[repeat_usages,setrepeat_usages]=useState([])
+   const getallRepeatUsages=async()=>
+    {
+        try {
+            const resp=await api.get('api/admin/get-TypeOfCase-RepeatUsage')
+            setrepeat_usages(resp.data)
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    useEffect(()=>
+    {
+        getallRepeatUsages()
+
+    },[])
  
 
 
@@ -205,11 +227,7 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
           <p className="label">Time to Lawyer Switch</p>
           <h3 className="value">{data.avgTimeToSwitch} Minutes</h3>
         </div>
-        <div className="card">
-          <Repeat className="icon green" />
-          <p className="label">Repeat Interactions %</p>
-          <h3 className="value">{data.repeatInteractionsPercent}%</h3>
-        </div>
+   
         <div className="card">
           <Timer className="icon yellow" />
           <p className="label">Avg. Session Duration</p>
@@ -221,6 +239,80 @@ const totalPagesUser = Math.ceil(userSummary.length / usersPerPage);
           <h3 className="value">{data.totalUserChats}</h3>
         </div>
       </div>
+
+         <div
+      className="card"
+      style={{
+        background: "#fff",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        borderRadius: "12px",
+        padding: "16px",
+        cursor: "pointer",
+        transition: "0.3s",
+      }}
+      onClick={() => setIsExpanded(!isExpanded)}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <Repeat className="icon green" size={24} style={{ color: "green" }} />
+          <p className="label" style={{ color: "#555", margin: "4px 0" }}>
+            Repeat Interactions %
+          </p>
+          {/* <h3 className="value" style={{ margin: 0 }}>
+            {data.repeatInteractionsPercent}%
+          </h3> */}
+        </div>
+        {isExpanded ? (
+          <ChevronUp size={20} color="#555" />
+        ) : (
+          <ChevronDown size={20} color="#555" />
+        )}
+      </div>
+
+      {/* Collapsible Section */}
+      {isExpanded && (
+        <div
+          style={{
+            marginTop: "12px",
+            borderTop: "1px solid #eee",
+            paddingTop: "10px",
+            maxHeight: "200px",
+            overflowY: "auto",
+          }}
+        >
+          {repeat_usages && repeat_usages.length > 0 ? (
+            repeat_usages.map((item, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  background: "#f9f9f9",
+                  padding: "8px 10px",
+                  borderRadius: "8px",
+                  marginBottom: "6px",
+                }}
+              >
+                <span style={{ fontWeight: 500, color: "#333" }}>
+                  {item._id?.label || item._id?.value || "N/A"}
+                </span>
+                <span style={{ color: "#666" }}>{item.avgSessions} Avg Sessions</span>
+              </div>
+            ))
+          ) : (
+            <p style={{ color: "#777", fontSize: "14px", textAlign: "center" }}>
+              No repeat usage data available
+            </p>
+          )}
+        </div>
+      )}
+    </div>
 
       {/* Time to First Consultation */}
       <div className="card full">

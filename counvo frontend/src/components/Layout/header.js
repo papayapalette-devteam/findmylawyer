@@ -1,10 +1,10 @@
 import React, { useState,useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logo1 from '../components/counvoImg/Counvo - LOGO (1).png';
-import logo from '../components/counvoImg/Counvo Logo-01.png'
+import logo1 from '../../components/counvoImg/Counvo - LOGO (1).png';
+import logo from '../../components/counvoImg/Counvo Logo-01.png'
 import Swal from 'sweetalert2';
-import api from '../api';
-import socket from './socket';
+import api from '../../api';
+import socket from '../socket';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);

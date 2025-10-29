@@ -4,7 +4,7 @@ import { Offcanvas, Button, Tab, Tabs } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
 import '../css/adminpanel.css'
-import Adminsidebar from './adminsidebar';
+import Adminsidebar from './Admin/adminsidebar';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, AreaChart, Area, BarChart, Bar } from 'recharts';
 import { FaCheck, FaTimes, FaEye, FaClock, FaUsers, FaUserTie, FaChartLine } from 'react-icons/fa';
 import LawyerProfileTabs from './viewlawyerinfo';

@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from "./header";
-import Footer from './footer';
+import Header from "./Layout/header";
+import Footer from './Layout/footer';
 
 const CancelliationPolicy = () => {
   return (

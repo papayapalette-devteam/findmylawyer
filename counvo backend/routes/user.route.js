@@ -11,6 +11,7 @@ const {
   getuser,
   updateuserprofile,
 } = require('../controllers/user.controller');
+const { addToFavorite, getFavorite } = require('../controllers/add_favorite');
 
 // Register a new user
 router.post('/', registerUser);
@@ -33,5 +34,9 @@ router.get('/:_id', getUserDetails);
 router.get('/', getuser);
 
 router.put('/updateuserprofile/:_id',upload.any(), updateuserprofile);
+
+router.post('/add-to-favorite', addToFavorite);
+
+router.get('/get-favorite/:userId', getFavorite);
 
 module.exports = router;

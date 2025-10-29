@@ -1,6 +1,6 @@
 import {React,useState,useEffect} from 'react';
-import api from '../api'; // adjust the path as needed
-import '../css/lawyerprofile.css'
+import api from '../../api'; // adjust the path as needed
+import '../../css/lawyerprofile.css'
 import { Offcanvas, Button, Tab, Tabs } from 'react-bootstrap';
 import { TextField, MenuItem, Card, CardContent, Typography, Grid, FormControlLabel, FormGroup,FormControl, FormLabel, RadioGroup,  Radio, OutlinedInput, Checkbox, ListItemText } from '@mui/material';
 import Select from 'react-select';
@@ -10,9 +10,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Lottie from "lottie-react";
 import Swal from 'sweetalert2';
-import { event } from 'jquery';
-import Clientsidebar from './clientsidebar';
-import Header from './header';
+import Header from '../header';
 
 
 

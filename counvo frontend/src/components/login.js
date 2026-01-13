@@ -96,9 +96,13 @@ const handleRegister = async (e) => {
         icon: 'success',
         title: 'Success',
         text: data.message,
+      }).then(()=>
+      {
+         setShowOtp(true);
+
       });
 
-      setActiveTab('login');
+     
     } else {
       const fd = new FormData();
       fd.append('firstName', formData.firstName);
@@ -325,6 +329,80 @@ if(!credentialsadmin)
 }
 }
 
+const [loading, setLoading] = useState(false);
+const [showOtp, setShowOtp] = useState(false);
+const [otp, setOtp] = useState("");
+
+
+const modalOverlay = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0,0,0,0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 1000,
+};
+
+const modalContent = {
+  backgroundColor: "#fff",
+  padding: "25px",
+  borderRadius: "8px",
+  width: "350px",
+  position: "relative",
+  boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
+};
+
+const closeButton = {
+  position: "absolute",
+  top: "10px",
+  right: "10px",
+  background: "transparent",
+  border: "none",
+  fontSize: "18px",
+  cursor: "pointer",
+};
+
+const handleVerifyOtp = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    const { data } = await api.post(
+      "/api/user/verify-otp",
+      {
+        email: formData.email,
+        otp,
+      }
+    );
+
+     Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful!',
+        text:data.message || "Registration successful!",
+        showConfirmButton: true,
+      });
+   
+    setShowOtp(false);
+    setActiveTab("login");
+    setOtp("");
+
+  } catch (error) {
+    console.error("OTP Verify Error:", error);
+
+    const errorMessage =
+      error.response?.data?.message || "OTP verification failed";
+
+    alert(errorMessage);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
 
   return (
@@ -437,6 +515,41 @@ if(!credentialsadmin)
           )}
         </div>
       </div>
+{showOtp && (
+  <div style={modalOverlay}>
+    <div style={modalContent}>
+      <h2 style={{ marginBottom: "10px" }}>Verify OTP</h2>
+
+      <p style={{ fontSize: "14px", marginBottom: "15px" }}>
+        OTP has been sent to <b>{formData.email}</b>
+      </p>
+
+      <form onSubmit={handleVerifyOtp}>
+        <input
+          type="text"
+          placeholder="Enter 6-digit OTP"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          style={inputStyle}
+          maxLength={6}
+          required
+        />
+
+        <button type="submit" style={buttonStyle}>
+          {loading ? "Verifying..." : "Verify OTP"}
+        </button>
+      </form>
+
+      <button
+        onClick={() => setShowOtp(false)}
+        style={closeButton}
+      >
+        ✖
+      </button>
+    </div>
+  </div>
+)}
+
 
           <>
       {isLoading && (

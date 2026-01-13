@@ -10,11 +10,14 @@ const {
   getUserDetails,
   getuser,
   updateuserprofile,
+  verifyOtp,
 } = require('../controllers/user.controller');
 const { addToFavorite, getFavorite } = require('../controllers/add_favorite');
 
 // Register a new user
 router.post('/', registerUser);
+
+router.post('/verify-otp',verifyOtp);
 
 // Login
 router.post('/login', loginUser);

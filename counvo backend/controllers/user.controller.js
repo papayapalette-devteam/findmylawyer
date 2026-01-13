@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
+const sendEmail = require("../utils/send_mail");
 
 require('dotenv').config();
 cloudinary.config({
@@ -14,23 +15,96 @@ cloudinary.config({
 });
 
 
+const otpStore = {};
+
+// 🔹 OTP generator
+const generateOTP = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
 const registerUser = async (req, res) => {
   try {
     const { fullName, username, email, password } = req.body;
 
     if (!fullName || !username || !email || !password) {
-      return res.status(400).send({ message: "All fields are mandatory" });
+      return res.status(400).json({ message: "All fields are mandatory" });
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: "Email already registered" });
+    }
 
-    const newUser = new UserModel({ fullName, username, email, password: hashedPassword });
-    const resp = await newUser.save();
-    return res.status(201).send({ message: 'Registered successfully', user: resp });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const otp = generateOTP();
+
+    // Save OTP temporarily
+    otpStore[email] = {
+      otp,
+      expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes
+      userData: {
+        fullName,
+        username,
+        email,
+        password: hashedPassword,
+      },
+    };
+
+    await sendEmail({
+      to: email,
+      subject: "Email Verification OTP",
+      html: `
+        <h3>Email Verification</h3>
+        <p>Your OTP is <b>${otp}</b></p>
+        <p>Valid for 10 minutes.</p>
+      `,
+    });
+
+    return res.status(200).json({
+      message: "OTP sent to email. Please verify to complete registration.",
+    });
   } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "Error Occurred" });
+    console.error(error);
+    return res.status(500).json({ message: "Registration failed" });
+  }
+};
+
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and OTP are required" });
+    }
+
+    const storedData = otpStore[email];
+
+    if (!storedData) {
+      return res.status(400).json({ message: "OTP expired or not found" });
+    }
+
+    if (storedData.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (storedData.expiresAt < Date.now()) {
+      delete otpStore[email];
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    // Create user after OTP verification
+    const newUser = new UserModel(storedData.userData);
+    await newUser.save();
+
+    // Remove OTP
+    delete otpStore[email];
+
+    return res.status(201).json({
+      message: "OTP verified successfully. Registration completed.",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "OTP verification failed" });
   }
 };
 
@@ -250,5 +324,5 @@ const updateuserprofile = async (req, res) => {
 };
 
 // Add to exports
-module.exports = { registerUser, loginUser, resetPassword, sendResetEmail, setNewPassword, getUserDetails,getuser,updateuserprofile };
+module.exports = { registerUser,verifyOtp, loginUser, resetPassword, sendResetEmail, setNewPassword, getUserDetails,getuser,updateuserprofile };
 
